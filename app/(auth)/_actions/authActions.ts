@@ -3,7 +3,7 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 // install this and types also for ts
-// import jwt, { JwtPayload } from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 
 type LoginState = {
     success: boolean,
@@ -54,24 +54,20 @@ export const loginAction = async (prevState: LoginState, formData: FormData) => 
             maxAge: 60 * 60 * 24 * 7,
             sameSite: "lax"
         })
-    }
 
 
-    //     // role based redirect (just once) - same logic present on proxy but runs on every request
-    //     const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload
+        // role based redirect (just once) - same logic present on proxy but runs on every request
+        const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload
 
-    //     if (decodedToken.role === "USER") {
-    //         redirect("/dashboard")
-    //     }
-    //     else if (decodedToken.role === "ADMIN") {
-    //         redirect("/admin-dashboard")
-    //     }
-    //     else if (decodedToken.role === "AUTHOR") {
-    //         redirect("/author-dashboard")
-    //     }
-    // }
-    if (res.status) {
-        redirect("/")
+        if (decodedToken.role === "CUSTOMER") {
+            redirect("/customer-dashboard")
+        }
+        else if (decodedToken.role === "TECHNICIAN") {
+            redirect("/technician-dashboard")
+        }
+        else if (decodedToken.role === "ADMIN") {
+            redirect("/admin-dashboard")
+        }
     }
     return result;
 }
