@@ -70,6 +70,9 @@ export const loginAction = async (prevState: LoginState, formData: FormData) => 
     //         redirect("/author-dashboard")
     //     }
     // }
+    if (res.status) {
+        redirect("/")
+    }
     return result;
 }
 

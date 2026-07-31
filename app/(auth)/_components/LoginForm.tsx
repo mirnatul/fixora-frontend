@@ -6,17 +6,16 @@ import { loginAction } from "../_actions/authActions"
 import { Button } from "@/components/ui/button"
 import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 
 export const LoginForm = () => {
-    const router = useRouter();
     const [state, action, pending] = useActionState(loginAction, false);
 
     useEffect(() => {
+        // console.log("state", state);
         if (!state) return;
         if (state.success) {
             toast.success(state.message || "Login Successful");
-            // router.push("/admin-dashboard")
+            // router.push("/")
         }
         if (!state.success) {
             toast.error(state.message || "Login failed");
