@@ -1,6 +1,5 @@
 import { getMe } from "@/service/getMe";
 import ProfileCard from "../../_components/ProfileCard";
-import TechnicianCard from "../_components/TechnicianCard";
 
 export default async function ProfilePage() {
     const result = await getMe();
@@ -20,11 +19,6 @@ export default async function ProfilePage() {
 
             {/* <EditUserInfo profile={profile}></EditUserInfo> */}
             <ProfileCard profile={profile} />
-
-
-            {profile.technicianProfile && (
-                <TechnicianCard technician={profile.technicianProfile} />
-            )}
         </div>
     );
 }

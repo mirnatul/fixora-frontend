@@ -18,7 +18,10 @@ type Booking = {
     slot: number[];
     address: string;
     totalAmount: number;
-    status: string;
+    status: "PENDING" | "ACCEPTED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+    payment: {
+        status: "COMPLETED";
+    } | null;
 };
 
 const SLOT_TIME: Record<number, string> = {
@@ -133,8 +136,7 @@ export default function BookingTable({
 
                             <TableCell className="px-6 py-6 text-right">
                                 <BookingActions
-                                    bookingId={booking.id}
-                                    status={booking.status}
+                                    booking={booking}
                                 />
                             </TableCell>
                         </TableRow>
