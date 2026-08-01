@@ -71,7 +71,7 @@ export default function BookingTable({
                         <TableHead className="w-14 px-6">#</TableHead>
                         <TableHead className="px-6">Date</TableHead>
                         <TableHead className="px-6">Time Slot</TableHead>
-                        <TableHead className="min-w-[260px] px-6">
+                        <TableHead className="min-w-65 px-6">
                             Address
                         </TableHead>
                         <TableHead className="px-6">Total</TableHead>

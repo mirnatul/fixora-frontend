@@ -30,14 +30,14 @@ export const cancelBooking = async (bookingId: string, userId: string) => {
         revalidateTag(`user-bookings-${userId}`, { expire: 0 })
     }
 
-    console.log(result);
+    // console.log(result);
     return result;
 }
 
 
 // payment
 export const doPayment = async (bookingId: string, userId: string) => {
-    console.log("Hit do payment");
+    // console.log("Hit do payment");
     // const params = new URLSearchParams()
     // if (query && query.searchTerm) {
     //     params.set("searchTerm", query.searchTerm as string)

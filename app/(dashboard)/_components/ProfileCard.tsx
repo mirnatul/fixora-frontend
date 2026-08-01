@@ -209,7 +209,7 @@ function InfoItem({
                 <span>{label}</span>
             </div>
 
-            <p className="font-medium break-words">
+            <p className="font-medium wrap-break-words">
                 {value || "Not provided"}
             </p>
         </div>

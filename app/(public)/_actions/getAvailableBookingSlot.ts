@@ -9,12 +9,12 @@ export const getAvailableBookingSlot = async (
         technicianId,
     });
 
-    console.log(date, technicianId);
+    // console.log(date, technicianId);
 
     const res = await fetch(
         `${process.env.BACKEND_API_URL}/api/bookings/availability?${params.toString()}`
     );
 
-    console.log(res);
+    // console.log(res);
     return res.json();
 };
