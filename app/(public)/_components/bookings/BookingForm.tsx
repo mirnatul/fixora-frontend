@@ -12,8 +12,6 @@ import { getAvailableBookingSlot } from "../../_actions/getAvailableBookingSlot"
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-
-
 interface Service {
     id: string;
     title: string;
@@ -33,23 +31,18 @@ interface BookingFormProps {
     service: Service;
 }
 
-const initialState = {
-    success: false,
-    message: "",
-    data: null
-};
-
 export function BookingForm({ service }: BookingFormProps) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const [selectedDate, setSelectedDate] = useState("");
     const [bookedSlots, setBookedSlots] = useState<number[]>([]);
+    const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
+    const [slotLoading, setSlotLoading] = useState(false);
 
     const [state, action, pending] = useActionState(
         createBooking,
-        initialState
+        null
     );
 
     const slots = [
@@ -59,16 +52,13 @@ export function BookingForm({ service }: BookingFormProps) {
         { id: 4, label: "04:00 - 06:00" },
     ];
 
-    const [slotLoading, setSlotLoading] = useState(false);
-
     const handleDateChange = async (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
         const date = e.target.value;
-        console.log(date);
 
-        setSelectedDate(date);
-        setSlotLoading(true)
+        setSelectedSlots([]);
+        setSlotLoading(true);
 
         const params = new URLSearchParams(searchParams.toString());
 
@@ -76,7 +66,6 @@ export function BookingForm({ service }: BookingFormProps) {
         params.set("technicianId", service.technicianId);
 
         router.replace(`${pathname}?${params.toString()}`);
-
 
         try {
             const res = await getAvailableBookingSlot(
@@ -90,8 +79,14 @@ export function BookingForm({ service }: BookingFormProps) {
         }
     };
 
+    const handleSlotChange = (slotId: number) => {
+        setSelectedSlots((prev) =>
+            prev.includes(slotId)
+                ? prev.filter((id) => id !== slotId)
+                : [...prev, slotId]
+        );
+    };
 
-    // only pick date from tomorrow
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -99,7 +94,6 @@ export function BookingForm({ service }: BookingFormProps) {
 
     return (
         <div className="grid gap-8 lg:grid-cols-3">
-            {/* Booking Form */}
             <Card className="lg:col-span-2">
                 <CardHeader>
                     <CardTitle>Booking Information</CardTitle>
@@ -107,13 +101,13 @@ export function BookingForm({ service }: BookingFormProps) {
 
                 <CardContent>
                     <form action={action} className="space-y-6">
+
                         <input
                             type="hidden"
                             name="serviceId"
                             value={service.id}
                         />
 
-                        {/* Booking Date */}
                         <div className="space-y-2">
                             <Label htmlFor="bookingDate">
                                 Booking Date
@@ -129,31 +123,38 @@ export function BookingForm({ service }: BookingFormProps) {
                             />
                         </div>
 
-                        {/* Time Slot */}
+
+                        {/* Time Slots */}
                         <div className="space-y-2">
                             <Label>Select Time Slot</Label>
 
                             <div className="grid grid-cols-2 gap-3">
                                 {slots.map((slot) => {
-                                    const isBooked = bookedSlots?.includes(slot.id);
+                                    const isBooked = bookedSlots.includes(slot.id);
+                                    const isSelected = selectedSlots.includes(slot.id);
 
                                     return (
                                         <label
                                             key={slot.id}
                                             className={`flex items-center gap-2 rounded-md border p-3 ${isBooked || slotLoading
-                                                    ? "cursor-not-allowed bg-gray-100 opacity-50"
+                                                ? "cursor-not-allowed bg-gray-100 opacity-50"
+                                                : isSelected
+                                                    ? "cursor-pointer border-primary bg-primary/10"
                                                     : "cursor-pointer"
                                                 }`}
                                         >
                                             <input
-                                                type="radio"
-                                                name="slot"
+                                                type="checkbox"
                                                 value={slot.id}
+                                                checked={isSelected}
                                                 disabled={isBooked || slotLoading}
-                                                required={!isBooked}
+                                                onChange={() =>
+                                                    handleSlotChange(slot.id)
+                                                }
                                             />
 
                                             {slot.label}
+
                                             {isBooked && (
                                                 <span className="ml-auto text-xs text-red-500">
                                                     Booked
@@ -163,9 +164,15 @@ export function BookingForm({ service }: BookingFormProps) {
                                     );
                                 })}
                             </div>
+
+                            <input
+                                type="hidden"
+                                name="slots"
+                                value={JSON.stringify(selectedSlots)}
+                            />
                         </div>
 
-                        {/* Address */}
+
                         <div className="space-y-2">
                             <Label htmlFor="address">
                                 Service Address
@@ -180,7 +187,7 @@ export function BookingForm({ service }: BookingFormProps) {
                             />
                         </div>
 
-                        {/* Notes */}
+
                         <div className="space-y-2">
                             <Label htmlFor="notes">
                                 Notes (Optional)
@@ -193,18 +200,6 @@ export function BookingForm({ service }: BookingFormProps) {
                                 placeholder="Additional information..."
                             />
                         </div>
-
-                        {state.message && (
-                            <p
-                                className={`text-sm ${state.success
-                                    ? "text-green-600"
-                                    : "text-red-500"
-                                    }`}
-                            >
-                                {state.message}
-                            </p>
-                        )}
-
                         <Button
                             type="submit"
                             className="w-full"
@@ -212,6 +207,7 @@ export function BookingForm({ service }: BookingFormProps) {
                         >
                             {pending ? "Booking..." : "Book Now"}
                         </Button>
+
                     </form>
                 </CardContent>
             </Card>

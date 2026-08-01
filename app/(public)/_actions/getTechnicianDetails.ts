@@ -20,11 +20,6 @@ export const getTechnicianDetails = async (technicianId: string) => {
     // }
 
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/technician/${technicianId}`, {
-        cache: "force-cache",
-        next: {
-            revalidate: 60 * 60 * 24,
-            tags: ["technician-details"]
-        }
     })
 
     const result = await res.json();
