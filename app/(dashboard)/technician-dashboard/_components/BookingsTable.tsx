@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
     Table,
@@ -9,8 +9,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import BookingActions from "./BookingActions";
+// import BookingActions from "./BookingActions";
 
 type Booking = {
     id: string;
@@ -29,20 +29,16 @@ const SLOT_TIME: Record<number, string> = {
 };
 
 const statusStyles: Record<string, string> = {
-    REQUESTED:
+    PENDING:
         "bg-amber-100 text-amber-700 border border-amber-300",
-    ACCEPTED:
-        "bg-blue-100 text-blue-700 border border-blue-300",
-    DECLINED:
-        "bg-red-100 text-red-700 border border-red-300",
     PAID:
         "bg-violet-100 text-violet-700 border border-violet-300",
     IN_PROGRESS:
-        "bg-green-100 text-green-700 border border-green-300",
+        "bg-blue-100 text-blue-700 border border-blue-300",
     COMPLETED:
-        "bg-gray-100 text-gray-700 border border-gray-300",
+        "bg-green-100 text-green-700 border border-green-300",
     CANCELLED:
-        "bg-red-900 text-white border border-red-900",
+        "bg-red-100 text-red-700 border border-red-300",
 };
 
 export default function BookingTable({
@@ -62,11 +58,6 @@ export default function BookingTable({
                 No bookings found.
             </div>
         );
-    }
-
-    // cancel
-    const handleCancelBooking = (bookingId: string) => {
-
     }
 
     return (
@@ -128,7 +119,8 @@ export default function BookingTable({
 
                             <TableCell className="px-6 py-6">
                                 <Badge
-                                    className={`rounded-full px-3 py-1 ${statusStyles[booking.status]}`}
+                                    className={`rounded-full px-3 py-1 ${statusStyles[booking.status]
+                                        }`}
                                 >
                                     {booking.status
                                         .replaceAll("_", " ")

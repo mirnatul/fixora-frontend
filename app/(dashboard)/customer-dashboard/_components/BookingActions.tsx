@@ -1,57 +1,111 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 
-type Booking = {
-    id: string;
+type BookingActionsProps = {
+    bookingId: string;
     status: string;
 };
 
 export default function BookingActions({
-    booking,
-}: {
-    booking: Booking;
-}) {
-    const handlePay = () => {
-        console.log("Pay", booking.id);
+    bookingId,
+    status,
+}: BookingActionsProps) {
+    const handleCancelBooking = async () => {
+        console.log("Cancel booking:", bookingId);
+
+        // TODO:
+        // await cancelBooking(bookingId);
     };
 
-    const handleEdit = () => {
-        console.log("Edit", booking.id);
+    const handlePayNow = async () => {
+        console.log("Pay booking:", bookingId);
+
+        // TODO:
+        // await createCheckoutSession(bookingId);
     };
 
-    const handleView = () => {
-        console.log("View", booking.id);
+    const handleReview = () => {
+        console.log("Leave review:", bookingId);
+
+        // TODO:
+        // router.push(`/customer-dashboard/reviews/${bookingId}`);
+    };
+
+    const renderActions = () => {
+        switch (status) {
+            case "PENDING":
+                return (
+                    <DropdownMenuItem
+                        className="text-red-600 focus:text-red-600"
+                        onClick={handleCancelBooking}
+                    >
+                        ❌ Cancel Booking
+                    </DropdownMenuItem>
+                );
+
+            case "ACCEPTED":
+                return (
+                    <DropdownMenuItem onClick={handlePayNow}>
+                        💳 Pay Now
+                    </DropdownMenuItem>
+                );
+
+            case "PAID":
+                return (
+                    <DropdownMenuItem disabled>
+                        ✅ Payment Completed
+                    </DropdownMenuItem>
+                );
+
+            case "IN_PROGRESS":
+                return (
+                    <DropdownMenuItem disabled>
+                        🚧 Job In Progress
+                    </DropdownMenuItem>
+                );
+
+            case "COMPLETED":
+                return (
+                    <DropdownMenuItem onClick={handleReview}>
+                        ⭐ Leave Review
+                    </DropdownMenuItem>
+                );
+
+            case "CANCELLED":
+                return (
+                    <DropdownMenuItem disabled>
+                        🚫 Booking Cancelled
+                    </DropdownMenuItem>
+                );
+
+            default:
+                return (
+                    <DropdownMenuItem disabled>
+                        No Actions Available
+                    </DropdownMenuItem>
+                );
+        }
     };
 
     return (
-        <div className="flex justify-end gap-2">
-            <Button
-                size="sm"
-                variant="outline"
-                onClick={handleView}
-            >
-                View
-            </Button>
-
-            {booking.status === "PENDING" && (
-                <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={handleEdit}
-                >
-                    Edit
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                    <MoreHorizontal className="h-5 w-5" />
                 </Button>
-            )}
+            </DropdownMenuTrigger>
 
-            {booking.status === "ACCEPTED" && (
-                <Button
-                    size="sm"
-                    onClick={handlePay}
-                >
-                    Pay
-                </Button>
-            )}
-        </div>
+            <DropdownMenuContent align="end">
+                {renderActions()}
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }
