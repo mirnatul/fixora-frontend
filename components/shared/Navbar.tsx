@@ -19,9 +19,9 @@ import { logout } from "@/service/logout";
 // Navigation items configuration
 const navItems = [
     { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Technicians", href: "/contact" },
-    { label: "Services", href: "/services" }
+    { label: "Technicians", href: "/technicians" },
+    { label: "Services", href: "/services" },
+    { label: "Categories", href: "/categories" }
 ];
 
 // User menu items configuration
