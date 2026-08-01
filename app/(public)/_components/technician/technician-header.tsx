@@ -54,8 +54,8 @@ export function TechnicianHeader({ technician, reviews }: TechnicianReviewsProps
         <div className="rounded-lg border border-border bg-card p-8">
             <div className="flex flex-col gap-8 md:flex-row md:gap-12">
                 {/* Avatar */}
-                <div className="flex flex-shrink-0 items-start">
-                    <div className="relative h-24 w-24 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-2xl font-bold text-white">
+                <div className="flex shrink-0 items-start">
+                    <div className="relative h-24 w-24 rounded-full bg-gradient-to from-primary to-primary/60 flex items-center justify-center text-2xl font-bold text-white">
                         {technician.user.profileImage ? (
                             <img
                                 src={technician.user.profileImage}
@@ -104,15 +104,15 @@ export function TechnicianHeader({ technician, reviews }: TechnicianReviewsProps
                     {/* Contact Info */}
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                            <MapPin className="h-4 w-4 flex-shrink-0" />
+                            <MapPin className="h-4 w-4 shrink-0" />
                             <span>{technician.user.city}</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                            <Phone className="h-4 w-4 flex-shrink-0" />
+                            <Phone className="h-4 w-4 shrink-0" />
                             <span>{technician.user.phone}</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                            <Mail className="h-4 w-4 flex-shrink-0" />
+                            <Mail className="h-4 w-4 shrink-0" />
                             <span>{technician.user.email}</span>
                         </div>
                     </div>

@@ -1,9 +1,20 @@
-import React from 'react'
+import { getAllTechnicians } from "../_actions/getAllTechnicians";
+import { TechnicianGrid } from "../_components/technician/technicianGrid";
 
-const TechniciansPage = () => {
+export default async function TechniciansPage() {
+    const result = await getAllTechnicians()
+
+    // console.log(result.data);
+
     return (
-        <div>TechniciansPage</div>
-    )
-}
+        <div className="container py-10 max-w-310 mx-auto">
+            <h1 className="mb-8 text-3xl font-bold">
+                Technicians
+            </h1>
 
-export default TechniciansPage
+            <TechnicianGrid
+                technicians={result.data.data ?? []}
+            />
+        </div>
+    );
+}
