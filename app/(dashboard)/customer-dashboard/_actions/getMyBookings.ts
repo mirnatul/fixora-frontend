@@ -18,6 +18,10 @@ export const getMyBookings = async (userId: string) => {
         headers: {
             Cookie: `accessToken=${accessToken}`,
             "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+        next: {
+            tags: [`user-bookings-${userId}`]
         }
     })
 
