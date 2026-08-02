@@ -3,25 +3,43 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-// export const getPublicNews = async ({ query }: { query?: { [key: string]: string | string[] | undefined } }) => {
-export const getAllUsers = async () => {
 
+interface GetAllUsersParams {
+    page?: number;
+    limit?: number;
+    searchTerm?: string;
+}
+
+export const getAllUsers = async ({
+    page = 1,
+    limit = 10,
+    searchTerm = "",
+}: GetAllUsersParams = {}) => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
 
+    const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+    });
 
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/users/admin/users`, {
-        headers: {
-            Cookie: `accessToken=${accessToken}`,
-            "Content-Type": "application/json",
+    if (searchTerm.trim()) {
+        params.append("searchTerm", searchTerm.trim());
+    }
+
+    const res = await fetch(
+        `${process.env.BACKEND_API_URL}/api/users/admin/users?${params.toString()}`,
+        {
+            headers: {
+                Cookie: `accessToken=${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            cache: "no-store",
         }
-    })
+    );
 
-    const result = await res.json();
-
-    // console.log(result);
-    return result;
-}
+    return await res.json();
+};
 
 interface IUpdateStatusPayload {
     userId: string;
