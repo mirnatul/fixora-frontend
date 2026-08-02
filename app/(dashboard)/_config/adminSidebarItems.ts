@@ -1,11 +1,18 @@
 import { ISidebarItem } from "@/lib/types";
-import { FileText, LayoutDashboard, User } from "lucide-react";
+import {
+    LayoutDashboard,
+    User,
+    Users,
+    Wrench,
+    CalendarCheck,
+    Tags,
+} from "lucide-react";
 
 export const ADMIN_SIDEBAR_ITEMS: ISidebarItem[] = [
     {
         label: "Admin Dashboard",
         href: "/admin-dashboard",
-        icon: LayoutDashboard
+        icon: LayoutDashboard,
     },
     {
         label: "Profile",
@@ -15,6 +22,21 @@ export const ADMIN_SIDEBAR_ITEMS: ISidebarItem[] = [
     {
         label: "All Users",
         href: "/admin-dashboard/all-users",
-        icon: FileText
+        icon: Users,
     },
-]
+    {
+        label: "All Technicians",
+        href: "/admin-dashboard/all-technicians",
+        icon: Wrench,
+    },
+    {
+        label: "All Bookings",
+        href: "/admin-dashboard/all-bookings",
+        icon: CalendarCheck,
+    },
+    {
+        label: "All Categories",
+        href: "/admin-dashboard/all-categories",
+        icon: Tags,
+    },
+];
