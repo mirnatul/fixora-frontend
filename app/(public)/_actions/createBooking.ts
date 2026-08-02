@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -30,6 +30,7 @@ export const createBooking = async (prevState: any, formData: FormData) => {
         }
     );
 
+    revalidatePath("/customer-dashboard/my-bookings")
     redirect("/customer-dashboard/my-bookings")
     // const result = await res.json();
 };

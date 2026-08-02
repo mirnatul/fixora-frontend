@@ -1,5 +1,5 @@
 import { ISidebarItem } from "@/lib/types"
-import { FileText, LayoutDashboard, User } from "lucide-react"
+import { CreditCard, FileText, LayoutDashboard, User } from "lucide-react"
 import { ADMIN_SIDEBAR_ITEMS } from "./adminSidebarItems"
 import { TECHNICIAN_SIDEBAR_ITEMS } from "./technicianSidebarItems"
 
@@ -19,6 +19,11 @@ const CUSTOMER_SIDEBAR_ITEMS: ISidebarItem[] = [
         label: "My Bookings",
         href: "/customer-dashboard/my-bookings",
         icon: FileText
+    },
+    {
+        label: "Payment History",
+        href: "/customer-dashboard/payment-history",
+        icon: CreditCard
     },
 ]
 

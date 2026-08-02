@@ -21,7 +21,7 @@ export const getMyBookings = async (userId: string) => {
         },
         cache: "no-cache",
         next: {
-            tags: [`user-bookings-${userId}`]
+            tags: [`user-bookings`]
         }
     })
 

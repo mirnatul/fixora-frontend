@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Clock, MapPin, Star } from "lucide-react";
+import Link from "next/link";
 
 interface ServiceCardProps {
     service: {
@@ -68,9 +70,16 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 )}
             </div>
 
-            <button className="mt-6 w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+            {/* <button className="mt-6 w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
                 Book Service
-            </button>
+            </button> */}
+            <Link href={`/bookings/${service.id}`}>
+                <Button
+                    className="flex-1 mt-4 w-full"
+                >
+                    Book Service
+                </Button>
+            </Link>
         </div>
     );
 }
