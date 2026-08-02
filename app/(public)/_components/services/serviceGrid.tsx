@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import ServiceCard from './serviceCard'
 import DescriptionModal from './descriptionModel'
+import Pagination from './Pagination'
 
 interface Service {
     id: string
@@ -19,14 +20,23 @@ interface Service {
     updatedAt: string
 }
 
+interface Meta {
+    page: number
+    limit: number
+    total: number
+    totalPage: number
+}
+
 interface ServicesGridProps {
     services: Service[]
+    meta: Meta
     userRole: string
     isLoggedIn: boolean
 }
 
 export default function ServicesGrid({
     services,
+    meta,
     userRole,
     isLoggedIn,
 }: ServicesGridProps) {
@@ -38,10 +48,10 @@ export default function ServicesGrid({
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {services.filter(s => s.active).map((service) => {
-
-                    return (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {services
+                    .filter((service) => service.active)
+                    .map((service) => (
                         <ServiceCard
                             key={service.id}
                             service={service}
@@ -55,11 +65,9 @@ export default function ServicesGrid({
                                 })
                             }
                         />
-                    )
-                })}
+                    ))}
             </div>
 
-            {/* Modals */}
             {selectedDescription && (
                 <DescriptionModal
                     title={selectedDescription.title}
@@ -68,6 +76,14 @@ export default function ServicesGrid({
                 />
             )}
 
+            {meta.totalPage > 1 && (
+                <div className="mt-10 flex justify-center">
+                    <Pagination
+                        currentPage={meta.page}
+                        totalPages={meta.totalPage}
+                    />
+                </div>
+            )}
         </>
     )
 }

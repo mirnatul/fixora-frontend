@@ -1,24 +1,36 @@
-"use server"
+"use server";
 
-// export const getPublicNews = async ({ query }: { query?: { [key: string]: string | string[] | undefined } }) => {
-export const getAllServices = async () => {
+type QueryParams = {
+    [key: string]: string | string[] | undefined;
+};
 
-    // const params = new URLSearchParams()
-    // if (query && query.searchTerm) {
-    //     params.set("searchTerm", query.searchTerm as string)
-    // }
+export const getAllServices = async (query?: QueryParams) => {
+    // console.log("get all service called", query);
+    const params = new URLSearchParams();
 
+    if (query) {
+        Object.entries(query).forEach(([key, value]) => {
+            if (!value) return;
 
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/services`, {
-        cache: "force-cache",
-        next: {
-            revalidate: 60 * 60 * 24,
-            tags: ["all-services"]
+            if (Array.isArray(value)) {
+                value.forEach((v) => params.append(key, v));
+            } else {
+                params.set(key, value);
+            }
+        });
+    }
+    // console.log(query);
+
+    // console.log(params.toString());
+
+    const res = await fetch(
+        `${process.env.BACKEND_API_URL}/api/services?${params.toString()}`,
+        {
+            cache: "no-cache",
         }
-    })
+    );
 
     const result = await res.json();
-
-    // console.log(result.data.services);
+    console.log(result);
     return result;
-}
+};
