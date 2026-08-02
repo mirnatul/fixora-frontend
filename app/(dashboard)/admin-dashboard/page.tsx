@@ -1,9 +1,19 @@
-import React from 'react'
+import { getDashboardStats } from "./_actions/getDashboardStats";
+import DashboardStats from "./_components/DashboardStats";
 
-const AdminDashboardPage = () => {
+export default async function AdminDashboardPage() {
+    const dashboardStats = await getDashboardStats();
+
     return (
-        <div>AdminDashboardPage</div>
-    )
-}
+        <div className="space-y-8 p-6">
+            <div>
+                <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+                <p className="mt-2 text-muted-foreground">
+                    Global overview of platform health and activity.
+                </p>
+            </div>
 
-export default AdminDashboardPage
+            <DashboardStats stats={dashboardStats.data} />
+        </div>
+    );
+}
