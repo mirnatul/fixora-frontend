@@ -53,7 +53,7 @@ export default function DashboardStats({
                     return (
                         <Card
                             key={card.title}
-                            className="group overflow-hidden border bg-gradient-to-br from-background to-muted/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                            className="group overflow-hidden border bg-linear-to-br from-background to-muted/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                         >
                             <CardContent className="relative flex items-center justify-between p-6">
                                 <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/5 transition-transform duration-500 group-hover:scale-125" />

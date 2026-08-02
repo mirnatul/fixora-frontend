@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function PaymentFailedPage() {
+export default function paymentFailedPage() {
     const router = useRouter();
 
     useEffect(() => {
