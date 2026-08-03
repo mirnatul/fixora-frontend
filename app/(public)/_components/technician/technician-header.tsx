@@ -3,7 +3,6 @@ import { Star } from 'lucide-react'
 import Image from 'next/image'
 
 interface TechnicianHeaderProps {
-
     user: {
         name: string
         phone: string
@@ -27,7 +26,7 @@ interface Review {
     customer: {
         id: string;
         name: string;
-        profileImage: string;
+        profileImage: string | null;
     };
 }
 
@@ -53,23 +52,19 @@ export function TechnicianHeader({ technician, reviews }: TechnicianReviewsProps
 
     return (
         <div className="rounded-lg border border-border bg-card p-8">
+
+
+            {/*  */}
             <div className="flex flex-col gap-8 md:flex-row md:gap-12">
-                {/* Avatar */}
-                <div className="flex shrink-0 items-start">
-                    <div className="relative h-24 w-24 rounded-full bg-gradient-to from-primary to-primary/60 flex items-center justify-center text-2xl font-bold text-white">
-                        {technician.user.profileImage ? (
-                            <Image
-                                src={technician.user.profileImage}
-                                alt={technician.user.name}
-                                width={64}
-                                height={64}
-                                className="h-full w-full rounded-full object-cover"
-                                unoptimized
-                            />
-                        ) : (
-                            initials
-                        )}
-                    </div>
+                <div className="h-24 w-24 overflow-hidden rounded-full">
+                    <Image
+                        src={technician.user.profileImage || "/dummy.jpg"}
+                        alt="Default profile"
+                        width={96}
+                        height={96}
+                        className="h-24 w-24 rounded-full object-cover"
+                        unoptimized
+                    />
                 </div>
 
                 {/* Info */}

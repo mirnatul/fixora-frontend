@@ -78,10 +78,8 @@ export default function ServiceCard({
                             </Link>
                         </Button>
                     ) : (
-                        <Button asChild variant="outline">
-                            <Link href="/login">
-                                Login as Customer
-                            </Link>
+                        <Button variant="outline" disabled>
+                            Login as Customer
                         </Button>
                     )}
                 </div>

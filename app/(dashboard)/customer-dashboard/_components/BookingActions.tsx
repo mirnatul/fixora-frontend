@@ -10,10 +10,11 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { cancelBooking, doPayment, leaveReview } from "../_actions/userActionOnBooking";
 import { getMe } from "@/service/getMe";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 
 type Booking = {
@@ -38,21 +39,59 @@ export default function BookingActions({
 
     const { id, status, payment, review } = booking;
 
-    const handleCancelBooking = async () => {
-        const user = await getMe();
-        const userId = user.data.profile.id;
 
-        await cancelBooking(id, userId);
+    const handleCancelBooking = async () => {
+        const toastId = toast.loading("Cancelling booking...");
+
+        try {
+            const user = await getMe();
+            const userId = user.data.profile.id;
+
+            const result = await cancelBooking(id, userId);
+
+            if (result.success) {
+                toast.success("Booking cancelled successfully", {
+                    id: toastId,
+                });
+            } else {
+                toast.error(result.message || "Failed to cancel booking", {
+                    id: toastId,
+                });
+            }
+
+        } catch (error) {
+            toast.error("Something went wrong while cancelling booking", {
+                id: toastId,
+            });
+        }
     };
 
+
     const handlePayNow = async () => {
-        const user = await getMe();
-        const userId = user.data.profile.id;
+        const toastId = toast.loading("Creating payment...");
 
-        const result = await doPayment(id, userId);
+        try {
+            const user = await getMe();
+            const userId = user.data.profile.id;
 
-        if (result.success) {
-            window.location.href = result.data.paymentUrl;
+            const result = await doPayment(id, userId);
+
+            if (result.success) {
+                toast.success("Redirecting to payment...", {
+                    id: toastId,
+                });
+
+                window.location.href = result.data.paymentUrl;
+            } else {
+                toast.error(result.message || "Payment failed", {
+                    id: toastId,
+                });
+            }
+
+        } catch (error) {
+            toast.error("Something went wrong while creating payment", {
+                id: toastId,
+            });
         }
     };
 
@@ -61,8 +100,11 @@ export default function BookingActions({
         setReviewOpen(true);
     };
 
+
     const handleSubmitReview = async () => {
         setPending(true);
+
+        const toastId = toast.loading("Submitting review...");
 
         try {
             const user = await getMe();
@@ -76,17 +118,32 @@ export default function BookingActions({
             const result = await leaveReview(id, payload, userId);
 
             if (result.success) {
+                toast.success("Review submitted successfully", {
+                    id: toastId,
+                });
+
                 setReviewOpen(false);
                 setComment("");
                 setRating(5);
+            } else {
+                toast.error(result.message || "Failed to submit review", {
+                    id: toastId,
+                });
             }
+
+        } catch (error) {
+            toast.error("Something went wrong while submitting review", {
+                id: toastId,
+            });
         } finally {
             setPending(false);
         }
     };
 
+
     const renderActions = () => {
         switch (status) {
+
             case "PENDING":
                 return (
                     <DropdownMenuItem
@@ -97,7 +154,9 @@ export default function BookingActions({
                     </DropdownMenuItem>
                 );
 
+
             case "ACCEPTED":
+
                 if (payment?.status === "COMPLETED") {
                     return (
                         <DropdownMenuItem disabled>
@@ -112,6 +171,7 @@ export default function BookingActions({
                     </DropdownMenuItem>
                 );
 
+
             case "IN_PROGRESS":
                 return (
                     <DropdownMenuItem disabled>
@@ -119,7 +179,9 @@ export default function BookingActions({
                     </DropdownMenuItem>
                 );
 
+
             case "COMPLETED":
+
                 if (review) {
                     return (
                         <DropdownMenuItem disabled>
@@ -134,12 +196,14 @@ export default function BookingActions({
                     </DropdownMenuItem>
                 );
 
+
             case "CANCELLED":
                 return (
                     <DropdownMenuItem disabled>
                         🚫 Booking Cancelled
                     </DropdownMenuItem>
                 );
+
 
             default:
                 return (
@@ -150,11 +214,15 @@ export default function BookingActions({
         }
     };
 
+
     return (
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                    >
                         <MoreHorizontal className="h-5 w-5" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -164,15 +232,22 @@ export default function BookingActions({
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Dialog open={reviewOpen} onOpenChange={setReviewOpen}>
+
+            <Dialog
+                open={reviewOpen}
+                onOpenChange={setReviewOpen}
+            >
                 <DialogContent>
+
                     <DialogHeader>
                         <DialogTitle>
                             Leave a Review
                         </DialogTitle>
                     </DialogHeader>
 
+
                     <div className="space-y-4">
+
                         <div>
                             <label className="text-sm font-medium">
                                 Rating
@@ -189,6 +264,7 @@ export default function BookingActions({
                             />
                         </div>
 
+
                         <div>
                             <label className="text-sm font-medium">
                                 Comment
@@ -203,13 +279,16 @@ export default function BookingActions({
                             />
                         </div>
 
+
                         <Button
                             onClick={handleSubmitReview}
                             disabled={pending}
                         >
                             {pending ? "Submitting..." : "Submit Review"}
                         </Button>
+
                     </div>
+
                 </DialogContent>
             </Dialog>
         </>

@@ -11,6 +11,7 @@ export const updateService = async (serviceId: string, prevState: any, formData:
         price: Number(formData.get("price")),
         duration: Number(formData.get("duration")),
         location: formData.get("location") as string,
+        active: formData.get("active") === "on",
     };
 
     const cookieStore = await cookies();

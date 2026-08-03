@@ -1,21 +1,35 @@
-"use client"
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { Loader2, Mail, MapPin, Pencil, Phone } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { updateUserInfo } from "../_actions/updateUserInfo";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { toast } from "sonner";
 
 type ProfileCardProps = {
     profile: {
         name: string;
         email: string;
         phone: string;
-        profileImage: string;
+        profileImage: string | null;
         address: string;
         city: string;
         role: string;
@@ -23,18 +37,27 @@ type ProfileCardProps = {
     };
 };
 
-
 const initialState = {
     success: false,
     message: "",
 };
 
 export default function ProfileCard({ profile }: ProfileCardProps) {
-
     const [state, formAction, pending] = useActionState(
         updateUserInfo,
         initialState
     );
+
+    useEffect(() => {
+        if (state.message) {
+            if (state.success) {
+                toast.success(state.message);
+            } else {
+                toast.error(state.message);
+            }
+        }
+    }, [state]);
+
     return (
         <Dialog>
             <Card>
@@ -52,18 +75,14 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
                 <CardContent className="space-y-6">
                     <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
                         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border bg-muted text-3xl font-bold">
-                            {profile.profileImage ? (
-                                <Image
-                                    src={profile.profileImage}
-                                    alt={profile.name}
-                                    width={64}
-                                    height={64}
-                                    className="h-full w-full object-cover"
-                                    unoptimized
-                                />
-                            ) : (
-                                profile.name.charAt(0).toUpperCase()
-                            )}
+                            <Image
+                                src={profile.profileImage || "/dummy.jpg"}
+                                alt="Profile image"
+                                width={96}
+                                height={96}
+                                className="h-24 w-24 rounded-full object-cover"
+                                unoptimized
+                            />
                         </div>
 
                         <div className="space-y-2">
@@ -115,8 +134,6 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
                 </CardContent>
             </Card>
 
-
-            {/* dialog */}
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Edit Profile</DialogTitle>
@@ -163,27 +180,18 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
                         />
                     </div>
 
-                    {state.message && (
-                        <p
-                            className={`text-sm ${state.success ? "text-green-600" : "text-red-500"
-                                }`}
-                        >
-                            {state.message}
-                        </p>
-                    )}
-
                     <DialogFooter>
                         <Button type="submit" disabled={pending}>
                             {pending && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             )}
-                            Save Changes
+
+                            {pending ? "Saving..." : "Save Changes"}
                         </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
         </Dialog>
-
     );
 }
 

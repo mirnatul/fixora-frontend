@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import { changeBookingStatus } from "../_actions/changeBookingStatus";
 
 type Booking = {
@@ -26,15 +27,39 @@ type BookingActionsProps = {
 export default function BookingActions({
     booking,
 }: BookingActionsProps) {
-    const [pendingStatus, setPendingStatus] = useState<Booking["status"] | null>(null);
+    const [pendingStatus, setPendingStatus] =
+        useState<Booking["status"] | null>(null);
 
     const handleStatusChange = async (
         bookingId: string,
         status: Booking["status"]
     ) => {
+        const toastId = toast.loading("Updating booking status...");
+
         try {
             setPendingStatus(status);
-            await changeBookingStatus(bookingId, status);
+
+            const result = await changeBookingStatus(bookingId, status);
+
+            if (result.success) {
+                toast.success(
+                    result.message || "Booking status updated successfully",
+                    {
+                        id: toastId,
+                    }
+                );
+            } else {
+                toast.error(
+                    result.message || "Failed to update booking status",
+                    {
+                        id: toastId,
+                    }
+                );
+            }
+        } catch (error) {
+            toast.error("Something went wrong", {
+                id: toastId,
+            });
         } finally {
             setPendingStatus(null);
         }
@@ -48,7 +73,10 @@ export default function BookingActions({
                         <DropdownMenuItem
                             disabled={!!pendingStatus}
                             onClick={() =>
-                                handleStatusChange(booking.id, "ACCEPTED")
+                                handleStatusChange(
+                                    booking.id,
+                                    "ACCEPTED"
+                                )
                             }
                         >
                             {pendingStatus === "ACCEPTED"
@@ -60,7 +88,10 @@ export default function BookingActions({
                             className="text-red-600"
                             disabled={!!pendingStatus}
                             onClick={() =>
-                                handleStatusChange(booking.id, "CANCELLED")
+                                handleStatusChange(
+                                    booking.id,
+                                    "CANCELLED"
+                                )
                             }
                         >
                             {pendingStatus === "CANCELLED"

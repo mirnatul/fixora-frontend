@@ -5,6 +5,7 @@ import {
     Ban,
     CheckCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,13 +34,30 @@ export default function UserRowActions({
     const isActive = user.status === "ACTIVE";
 
     const handleStatusChange = async () => {
+        const toastId = toast.loading(
+            isActive ? "Banning user..." : "Activating user..."
+        );
+
         try {
             await updateUserStatus({
                 userId: user.id,
                 status: isActive ? "BANNED" : "ACTIVE",
             });
+
+            toast.success(
+                isActive
+                    ? "User banned successfully."
+                    : "User activated successfully.",
+                {
+                    id: toastId,
+                }
+            );
         } catch (error) {
             console.error("Failed to update user status:", error);
+
+            toast.error("Failed to update user status.", {
+                id: toastId,
+            });
         }
     };
 

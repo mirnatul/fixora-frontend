@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateService } from "../../_actions/updateService";
+import { toast } from "sonner";
 
 interface Service {
     id: string;
@@ -45,24 +46,31 @@ export default function ServiceCard({
     service,
     onSeeMore,
 }: ServiceCardProps) {
+
     const [open, setOpen] = useState(false);
+    const [active, setActive] = useState(service.active);
+
 
     const truncatedDescription =
         service.description.length > 80
             ? service.description.substring(0, 80) + "..."
             : service.description;
 
+
     const ratingNumber = parseFloat(service.rating);
+
 
     const updateServiceAction = updateService.bind(
         null,
         service.id
     );
 
+
     const [state, action, pending] = useActionState(
         updateServiceAction,
         initialState
     );
+
 
     useEffect(() => {
         if (state.success) {
@@ -70,18 +78,38 @@ export default function ServiceCard({
         }
     }, [state]);
 
+
+    useEffect(() => {
+        if (!state.message) return;
+
+        if (state.success) {
+            toast.success(state.message);
+            setOpen(false);
+        } else {
+            toast.error(state.message);
+        }
+    }, [state]);
+
+
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
+
             <div className="bg-white dark:bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+
 
                 {/* Header */}
                 <div className="p-4 border-b border-border">
+
                     <div className="flex justify-between items-start gap-2 mb-2">
+
                         <h3 className="text-lg font-semibold text-foreground flex-1">
                             {service.title}
                         </h3>
 
+
                         <div className="text-right">
+
                             <p className="text-2xl font-bold text-primary">
                                 ৳{service.price}
                             </p>
@@ -89,24 +117,33 @@ export default function ServiceCard({
                             <p className="text-xs text-muted-foreground">
                                 {service.duration} min
                             </p>
+
                         </div>
+
                     </div>
 
+
                     <div className="flex items-center gap-1">
+
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
 
                         <span className="text-sm font-medium">
                             {ratingNumber}
                         </span>
+
                     </div>
+
                 </div>
+
 
 
                 {/* Description */}
                 <div className="p-4 border-b border-border">
+
                     <p className="text-sm text-gray-700 dark:text-muted-foreground">
                         {truncatedDescription}
                     </p>
+
 
                     <button
                         onClick={onSeeMore}
@@ -114,42 +151,69 @@ export default function ServiceCard({
                     >
                         See more →
                     </button>
+
                 </div>
+
 
 
                 {/* Location */}
                 <div className="p-4 border-b border-border">
+
                     <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-muted-foreground">
-                        <span>📍</span>
-                        <span>{service.location}</span>
+
+                        <span>
+                            📍
+                        </span>
+
+                        <span>
+                            {service.location}
+                        </span>
+
                     </div>
+
                 </div>
 
 
-                {/* Update Button */}
-                <div className="p-4">
+
+
+                {/* Action Button */}
+                <div className="flex gap-3 p-4 w-full">
+
                     <DialogTrigger asChild>
+
                         <Button variant="outline">
                             Update Service
                         </Button>
+
                     </DialogTrigger>
+
                 </div>
+
 
             </div>
 
 
-            {/* Dialog */}
+
+
+
+            {/* Update Dialog */}
             <DialogContent className="sm:max-w-lg">
 
+
                 <DialogHeader>
+
                     <DialogTitle>
                         Update Service
                     </DialogTitle>
 
+
                     <DialogDescription>
                         Update your service information.
                     </DialogDescription>
+
                 </DialogHeader>
+
+
 
 
                 <form
@@ -157,38 +221,54 @@ export default function ServiceCard({
                     className="space-y-4"
                 >
 
+
                     <div>
+
                         <Label htmlFor="title">
                             Title
                         </Label>
+
 
                         <Input
                             id="title"
                             name="title"
                             defaultValue={service.title}
                         />
+
                     </div>
 
 
+
+
+
                     <div>
+
                         <Label htmlFor="description">
                             Description
                         </Label>
+
 
                         <Textarea
                             id="description"
                             name="description"
                             defaultValue={service.description}
                         />
+
                     </div>
+
+
+
 
 
                     <div className="grid grid-cols-2 gap-4">
 
+
                         <div>
+
                             <Label htmlFor="price">
                                 Price (৳)
                             </Label>
+
 
                             <Input
                                 id="price"
@@ -196,13 +276,17 @@ export default function ServiceCard({
                                 type="number"
                                 defaultValue={service.price}
                             />
+
                         </div>
 
 
+
                         <div>
+
                             <Label htmlFor="duration">
                                 Duration (Minutes)
                             </Label>
+
 
                             <Input
                                 id="duration"
@@ -210,50 +294,68 @@ export default function ServiceCard({
                                 type="number"
                                 defaultValue={service.duration}
                             />
+
                         </div>
+
 
                     </div>
 
 
+
+
+
                     <div>
+
                         <Label htmlFor="location">
                             Location
                         </Label>
+
 
                         <Input
                             id="location"
                             name="location"
                             defaultValue={service.location}
                         />
+
                     </div>
 
 
-                    {state.message && (
-                        <p
-                            className={`text-sm ${state.success
-                                ? "text-green-600"
-                                : "text-red-600"
-                                }`}
-                        >
-                            {state.message}
-                        </p>
-                    )}
 
 
+
+                    {/* Active Toggle */}
+                    <div className="flex items-center gap-3">
+
+                        <input
+                            id="active"
+                            name="active"
+                            type="checkbox"
+                            checked={active}
+                            onChange={(e) =>
+                                setActive(e.target.checked)
+                            }
+                            className="h-4 w-4"
+                        />
+
+
+                        <Label htmlFor="active">
+                            Active Service
+                        </Label>
+
+                    </div>
                     <Button
                         className="w-full"
                         type="submit"
                         disabled={pending}
                     >
+
                         {pending
                             ? "Updating..."
-                            : "Update Service"}
+                            : "Update Service"
+                        }
                     </Button>
-
                 </form>
-
             </DialogContent>
-
         </Dialog>
     );
 }

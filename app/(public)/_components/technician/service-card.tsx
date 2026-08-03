@@ -18,9 +18,11 @@ interface ServiceCardProps {
             name: string;
         };
     };
+    userRole?: string;
 }
 
-export function ServiceCard({ service }: ServiceCardProps) {
+
+export function ServiceCard({ service, userRole }: ServiceCardProps) {
     const ratingValue = Number(service.rating);
     const hasRating = !Number.isNaN(ratingValue) && ratingValue > 0;
 
@@ -70,16 +72,14 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 )}
             </div>
 
-            {/* <button className="mt-6 w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
-                Book Service
-            </button> */}
-            <Link href={`/bookings/${service.id}`}>
+
+            {userRole === "CUSTOMER" && <Link href={`/bookings/${service.id}`}>
                 <Button
                     className="flex-1 mt-4 w-full"
                 >
                     Book Service
                 </Button>
-            </Link>
+            </Link>}
         </div>
     );
 }

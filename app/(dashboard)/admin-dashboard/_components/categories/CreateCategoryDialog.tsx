@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { createCategory } from "../../_actions/createCategory";
 
@@ -33,9 +34,19 @@ export default function CreateCategoryDialog() {
     );
 
     useEffect(() => {
+        if (!state.message) return;
+
         if (state.success) {
+            toast.success(
+                state.message || "Category created successfully."
+            );
+
             formRef.current?.reset();
             setOpen(false);
+        } else {
+            toast.error(
+                state.message || "Failed to create category."
+            );
         }
     }, [state]);
 
@@ -87,17 +98,6 @@ export default function CreateCategoryDialog() {
                             required
                         />
                     </div>
-
-                    {state.message && (
-                        <p
-                            className={`text-sm ${state.success
-                                    ? "text-green-600"
-                                    : "text-red-600"
-                                }`}
-                        >
-                            {state.message}
-                        </p>
-                    )}
 
                     <Button
                         type="submit"

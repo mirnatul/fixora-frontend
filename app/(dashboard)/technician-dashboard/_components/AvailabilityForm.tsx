@@ -47,9 +47,11 @@ export default function AvailabilityForm({
 
         try {
             const res = await getAvailableBookingSlot(date, technicianId);
+
             setBookedSlots(res.data ?? []);
         } catch (error) {
             console.error(error);
+
             setBookedSlots([]);
         } finally {
             setSlotLoading(false);
@@ -71,19 +73,17 @@ export default function AvailabilityForm({
         if (!state) return;
 
         if (state.success) {
-            toast.success(
-                state.message || "Availability created successfully."
-            );
-
             if (selectedDate) {
                 fetchBookedSlots(selectedDate);
             }
 
             setSelectedSlots([]);
+
+            toast.success(state.message || "Availability saved successfully.");
         } else {
             toast.error(state.message || "Something went wrong.");
         }
-    }, [state, selectedDate]);
+    }, [state]);
 
     const handleSlotChange = (slotId: number) => {
         setSelectedSlots((prev) =>
@@ -94,7 +94,7 @@ export default function AvailabilityForm({
     };
 
     return (
-        <Card className="w-full max-w-4xl mx-auto">
+        <Card className="mx-auto w-full max-w-4xl">
             <CardHeader>
                 <CardTitle>Block Time Slots</CardTitle>
             </CardHeader>
@@ -179,7 +179,9 @@ export default function AvailabilityForm({
                             selectedSlots.length === 0
                         }
                     >
-                        {pending ? "Saving..." : "Save Availability"}
+                        {pending
+                            ? "Saving..."
+                            : "Save Availability"}
                     </Button>
                 </form>
             </CardContent>

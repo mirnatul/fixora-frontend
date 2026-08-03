@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { updateCategory } from "../../_actions/updateCategory";
 
@@ -50,8 +51,18 @@ export default function CategoryCard({
     );
 
     useEffect(() => {
+        if (!state.message) return;
+
         if (state.success) {
+            toast.success(
+                state.message || "Category updated successfully."
+            );
+
             setOpen(false);
+        } else {
+            toast.error(
+                state.message || "Failed to update category."
+            );
         }
     }, [state]);
 
@@ -86,7 +97,6 @@ export default function CategoryCard({
                 </div>
             </div>
 
-            {/* Update Dialog */}
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>
@@ -123,24 +133,11 @@ export default function CategoryCard({
                         <Textarea
                             id="description"
                             name="description"
-                            defaultValue={
-                                category.description
-                            }
+                            defaultValue={category.description}
                             rows={4}
                             required
                         />
                     </div>
-
-                    {state.message && (
-                        <p
-                            className={`text-sm ${state.success
-                                ? "text-green-600"
-                                : "text-red-600"
-                                }`}
-                        >
-                            {state.message}
-                        </p>
-                    )}
 
                     <Button
                         type="submit"

@@ -31,6 +31,5 @@ export const createBooking = async (prevState: any, formData: FormData) => {
     );
 
     revalidatePath("/customer-dashboard/my-bookings")
-    redirect("/customer-dashboard/my-bookings")
-    // const result = await res.json();
+    return await res.json()
 };

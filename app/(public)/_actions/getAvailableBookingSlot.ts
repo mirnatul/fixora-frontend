@@ -15,6 +15,7 @@ export const getAvailableBookingSlot = async (
         `${process.env.BACKEND_API_URL}/api/bookings/availability?${params.toString()}`
     );
 
-    // console.log(res);
-    return res.json();
+    const data = await res.json();
+
+    return data;
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { createService } from "../../_actions/createService";
 
@@ -46,9 +47,15 @@ export default function CreateServiceDialog({
     );
 
     useEffect(() => {
+        if (!state.message) return;
+
         if (state.success) {
+            toast.success(state.message);
+
             formRef.current?.reset();
             setOpen(false);
+        } else {
+            toast.error(state.message);
         }
     }, [state]);
 
@@ -80,7 +87,6 @@ export default function CreateServiceDialog({
                         value={userId}
                     />
 
-                    {/* Title */}
                     <div>
                         <Label htmlFor="title">
                             Title
@@ -94,7 +100,6 @@ export default function CreateServiceDialog({
                         />
                     </div>
 
-                    {/* Description */}
                     <div>
                         <Label htmlFor="description">
                             Description
@@ -108,7 +113,6 @@ export default function CreateServiceDialog({
                         />
                     </div>
 
-                    {/* Category */}
                     <div>
                         <Label htmlFor="categoryId">
                             Category
@@ -139,7 +143,6 @@ export default function CreateServiceDialog({
                         </select>
                     </div>
 
-                    {/* Price & Duration */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <Label htmlFor="price">
@@ -172,7 +175,6 @@ export default function CreateServiceDialog({
                         </div>
                     </div>
 
-                    {/* Location */}
                     <div>
                         <Label htmlFor="location">
                             Location
@@ -185,18 +187,6 @@ export default function CreateServiceDialog({
                             required
                         />
                     </div>
-
-                    {/* Error/Success Message */}
-                    {state.message && (
-                        <p
-                            className={`text-sm ${state.success
-                                    ? "text-green-600"
-                                    : "text-red-600"
-                                }`}
-                        >
-                            {state.message}
-                        </p>
-                    )}
 
                     <Button
                         type="submit"

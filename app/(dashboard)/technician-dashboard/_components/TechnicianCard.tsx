@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import {
     Briefcase,
     Loader2,
@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { updateTechnicianInfo } from "../_actions/updateTechnicianInfo";
-
+import { toast } from "sonner";
 
 type TechnicianCardProps = {
     technician: {
@@ -55,6 +55,16 @@ export default function TechnicianCard({
         initialState
     );
 
+    useEffect(() => {
+        if (!state.message) return;
+
+        if (state.success) {
+            toast.success(state.message);
+        } else {
+            toast.error(state.message);
+        }
+    }, [state]);
+
     return (
         <Dialog>
             <Card>
@@ -72,7 +82,7 @@ export default function TechnicianCard({
                 <CardContent className="space-y-6">
                     <div>
                         <h3 className="mb-2 font-semibold">Bio</h3>
-                        <p className="text-muted-foreground whitespace-pre-wrap">
+                        <p className="whitespace-pre-wrap text-muted-foreground">
                             {technician.bio || "No bio added yet."}
                         </p>
                     </div>
@@ -160,23 +170,12 @@ export default function TechnicianCard({
                         />
                     </div>
 
-                    {state.message && (
-                        <p
-                            className={`text-sm ${state.success
-                                ? "text-green-600"
-                                : "text-red-500"
-                                }`}
-                        >
-                            {state.message}
-                        </p>
-                    )}
-
                     <DialogFooter>
                         <Button type="submit" disabled={pending}>
                             {pending && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             )}
-                            Save Changes
+                            {pending ? "Saving..." : "Save Changes"}
                         </Button>
                     </DialogFooter>
                 </form>
@@ -201,7 +200,7 @@ function InfoItem({
                 <span>{label}</span>
             </div>
 
-            <p className="font-medium wrap-break-words">{value}</p>
+            <p className="break-words font-medium">{value}</p>
         </div>
     );
 }

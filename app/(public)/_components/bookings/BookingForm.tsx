@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import { createBooking } from "../../_actions/createBooking";
 import { getAvailableBookingSlot } from "../../_actions/getAvailableBookingSlot";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 interface Service {
     id: string;
@@ -45,12 +46,33 @@ export function BookingForm({ service }: BookingFormProps) {
         null
     );
 
+
+    useEffect(() => {
+        if (!state) return;
+
+        if (state.success) {
+            toast.success(
+                state.message || "Booking created successfully"
+            );
+            setTimeout(() => {
+                router.push("/customer-dashboard/my-bookings");
+            }, 1000);
+        } else {
+            toast.error(
+                state.message || "Failed to create booking"
+            );
+        }
+
+    }, [state]);
+
+
     const slots = [
         { id: 1, label: "09:00 - 11:00" },
         { id: 2, label: "11:00 - 01:00" },
         { id: 3, label: "02:00 - 04:00" },
         { id: 4, label: "04:00 - 06:00" },
     ];
+
 
     const handleDateChange = async (
         e: React.ChangeEvent<HTMLInputElement>
@@ -63,9 +85,15 @@ export function BookingForm({ service }: BookingFormProps) {
         const params = new URLSearchParams(searchParams.toString());
 
         params.set("date", date);
-        params.set("technicianId", service.technicianId);
+        params.set(
+            "technicianId",
+            service.technicianId
+        );
 
-        router.replace(`${pathname}?${params.toString()}`);
+        router.replace(
+            `${pathname}?${params.toString()}`
+        );
+
 
         try {
             const res = await getAvailableBookingSlot(
@@ -74,10 +102,15 @@ export function BookingForm({ service }: BookingFormProps) {
             );
 
             setBookedSlots(res.data);
+
+        } catch (error) {
+            toast.error("Failed to load available slots");
+
         } finally {
             setSlotLoading(false);
         }
     };
+
 
     const handleSlotChange = (slotId: number) => {
         setSelectedSlots((prev) =>
@@ -87,20 +120,34 @@ export function BookingForm({ service }: BookingFormProps) {
         );
     };
 
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const minDate = tomorrow.toISOString().split("T")[0];
+    const tomorrow = new Date();
+    tomorrow.setDate(
+        tomorrow.getDate() + 1
+    );
+
+    const minDate =
+        tomorrow.toISOString().split("T")[0];
+
 
     return (
         <div className="grid gap-8 lg:grid-cols-3">
+
             <Card className="lg:col-span-2">
+
                 <CardHeader>
-                    <CardTitle>Booking Information</CardTitle>
+                    <CardTitle>
+                        Booking Information
+                    </CardTitle>
                 </CardHeader>
 
+
                 <CardContent>
-                    <form action={action} className="space-y-6">
+
+                    <form
+                        action={action}
+                        className="space-y-6"
+                    >
 
                         <input
                             type="hidden"
@@ -108,7 +155,9 @@ export function BookingForm({ service }: BookingFormProps) {
                             value={service.id}
                         />
 
+
                         <div className="space-y-2">
+
                             <Label htmlFor="bookingDate">
                                 Booking Date
                             </Label>
@@ -121,19 +170,31 @@ export function BookingForm({ service }: BookingFormProps) {
                                 onChange={handleDateChange}
                                 required
                             />
+
                         </div>
 
 
-                        {/* Time Slots */}
+
                         <div className="space-y-2">
-                            <Label>Select Time Slot</Label>
+
+                            <Label>
+                                Select Time Slot
+                            </Label>
+
 
                             <div className="grid grid-cols-2 gap-3">
+
                                 {slots.map((slot) => {
-                                    const isBooked = bookedSlots.includes(slot.id);
-                                    const isSelected = selectedSlots.includes(slot.id);
+
+                                    const isBooked =
+                                        bookedSlots.includes(slot.id);
+
+                                    const isSelected =
+                                        selectedSlots.includes(slot.id);
+
 
                                     return (
+
                                         <label
                                             key={slot.id}
                                             className={`flex items-center gap-2 rounded-md border p-3 ${isBooked || slotLoading
@@ -143,37 +204,53 @@ export function BookingForm({ service }: BookingFormProps) {
                                                     : "cursor-pointer"
                                                 }`}
                                         >
+
                                             <input
                                                 type="checkbox"
                                                 value={slot.id}
                                                 checked={isSelected}
-                                                disabled={isBooked || slotLoading}
+                                                disabled={
+                                                    isBooked ||
+                                                    slotLoading
+                                                }
                                                 onChange={() =>
-                                                    handleSlotChange(slot.id)
+                                                    handleSlotChange(
+                                                        slot.id
+                                                    )
                                                 }
                                             />
 
                                             {slot.label}
+
 
                                             {isBooked && (
                                                 <span className="ml-auto text-xs text-red-500">
                                                     Booked
                                                 </span>
                                             )}
+
                                         </label>
                                     );
                                 })}
+
                             </div>
+
 
                             <input
                                 type="hidden"
                                 name="slots"
-                                value={JSON.stringify(selectedSlots)}
+                                value={JSON.stringify(
+                                    selectedSlots
+                                )}
                             />
+
                         </div>
 
 
+
+
                         <div className="space-y-2">
+
                             <Label htmlFor="address">
                                 Service Address
                             </Label>
@@ -185,10 +262,14 @@ export function BookingForm({ service }: BookingFormProps) {
                                 placeholder="Enter your address..."
                                 required
                             />
+
                         </div>
 
 
+
+
                         <div className="space-y-2">
+
                             <Label htmlFor="notes">
                                 Notes (Optional)
                             </Label>
@@ -199,18 +280,31 @@ export function BookingForm({ service }: BookingFormProps) {
                                 rows={4}
                                 placeholder="Additional information..."
                             />
+
                         </div>
+
+
+
+
                         <Button
                             type="submit"
                             className="w-full"
                             disabled={pending}
                         >
-                            {pending ? "Booking..." : "Book Now"}
+                            {
+                                pending
+                                    ? "Booking..."
+                                    : "Book Now"
+                            }
                         </Button>
 
+
                     </form>
+
                 </CardContent>
+
             </Card>
+
         </div>
     );
 }

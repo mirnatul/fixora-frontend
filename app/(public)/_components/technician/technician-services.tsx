@@ -29,9 +29,10 @@ interface Review {
 interface TechnicianReviewsProps {
     services?: Service[] | null;
     reviews?: Review[] | null;
+    userRole?: string
 }
 
-export function TechnicianServices({ services, reviews }: TechnicianReviewsProps) {
+export function TechnicianServices({ services, userRole }: TechnicianReviewsProps) {
     const serviceList = services ?? [];
 
     const activeServices = serviceList.filter((service) => service.active);
@@ -61,7 +62,7 @@ export function TechnicianServices({ services, reviews }: TechnicianReviewsProps
             ) : (
                 <div className="grid gap-6">
                     {activeServices.map((service) => (
-                        <ServiceCard key={service.id} service={service} />
+                        <ServiceCard key={service.id} service={service} userRole={userRole} />
                     ))}
                 </div>
             )}

@@ -32,7 +32,7 @@ export function TechnicianCard({
             <div className="flex items-center gap-4">
                 {technician.user.profileImage ? (
                     <Image
-                        src={technician.user.profileImage}
+                        src={technician.user.profileImage || "/dummy.jpg"}
                         alt={technician.user.name}
                         width={64}
                         height={64}

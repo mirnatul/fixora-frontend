@@ -114,15 +114,15 @@ export default function ServiceCard({
                         Technician Details
                     </Button>
                 </Link>
-                <Link href={`/bookings/${service.id}`}>
+                {userRole === "CUSTOMER" && <Link href={`/bookings/${service.id}`}>
                     <Button
                         onClick={handleBookService}
-                        variant={isLoggedIn && userRole === 'CUSTOMER' ? 'default' : 'secondary'}
                         className="flex-1"
                     >
                         Book Service
                     </Button>
-                </Link>
+                </Link>}
+
             </div>
 
             {/* Alert Message */}

@@ -28,20 +28,15 @@ export default function TechnicianCard({
         <Card className="overflow-hidden transition-shadow hover:shadow-lg">
             <CardContent className="p-6">
                 <div className="flex flex-col items-center text-center">
-                    {technician.user.profileImage ? (
-                        <Image
-                            src={technician.user.profileImage}
-                            alt={technician.user.name}
-                            width={64}
-                            height={64}
-                            className="h-16 w-16 rounded-full object-cover"
-                            unoptimized
-                        />
-                    ) : (
-                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-semibold text-primary-foreground">
-                            {technician.user.name.charAt(0).toUpperCase()}
-                        </div>
-                    )}
+
+                    <Image
+                        src={technician.user.profileImage || "/dummy.jpg"}
+                        alt={technician.user.name}
+                        width={64}
+                        height={64}
+                        className="h-16 w-16 rounded-full object-cover"
+                        unoptimized
+                    />
 
                     <div className="mb-2 flex items-center gap-1">
                         <h3 className="text-lg font-semibold">

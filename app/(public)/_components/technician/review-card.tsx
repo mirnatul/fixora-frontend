@@ -11,29 +11,27 @@ interface ReviewCardProps {
         customer: {
             id: string;
             name: string;
-            profileImage: string;
+            profileImage: string | null;
         };
     };
 }
 
 export function ReviewCard({ review }: ReviewCardProps) {
+
     return (
         <div className="rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:shadow-md">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                        {review.customer.profileImage ? (
-                            <Image
-                                src={review.customer.profileImage}
-                                alt={review.customer.name}
-                                width={64}
-                                height={64}
-                                className="h-full w-full object-cover"
-                                unoptimized
-                            />
-                        ) : (
-                            review.customer.name.charAt(0).toUpperCase()
-                        )}
+
+                        <Image
+                            src={review.customer.profileImage || "/dummy.jpg"}
+                            alt={review.customer.name}
+                            width={64}
+                            height={64}
+                            className="h-full w-full object-cover"
+                            unoptimized
+                        />
                     </div>
 
                     <div>
