@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
     return (
-        <section className="border-b bg-linear-to-br from-primary/10 via-background to-primary/5 md:px-6">
+        <section className="border-b bg-linear-to-br from-primary/10 via-background to-primary/5 md:px-6 mx-auto px-2">
             <div className="container grid gap-10 py-20 lg:grid-cols-2 lg:items-center">
                 <div>
                     <h1 className="text-5xl font-bold leading-tight">
@@ -34,7 +34,7 @@ export default function HeroSection() {
                     </div>
                 </div>
 
-                <div className="relative h-[420px] overflow-hidden rounded-xl border">
+                <div className="relative h-105 overflow-hidden rounded-xl border">
                     <Image
                         src="https://img.magnific.com/free-photo/part-male-construction-worker_329181-3734.jpg?semt=ais_hybrid&w=740&q=80"
                         alt="Home service professionals"

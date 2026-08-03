@@ -8,22 +8,32 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { logout } from "@/service/logout";
-import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
+import {
+    Sheet,
+    SheetContent,
+    SheetClose,
+    SheetTrigger,
+} from "@/components/ui/sheet";
+
+import { logout } from "@/service/logout";
+import {
+    LayoutDashboard,
+    LogOut,
+    Menu,
+    Settings,
+    User,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { logout } from "@/service/logout";
 
-// Navigation items configuration
 const navItems = [
     { label: "Home", href: "/" },
     { label: "Technicians", href: "/technicians" },
-    { label: "Services", href: "/services" }
+    { label: "Services", href: "/services" },
 ];
 
-// User menu items configuration
 const userMenuItems = [
     { label: "Dashboard", icon: LayoutDashboard, action: "dashboard" },
     { label: "Profile", icon: User, action: "profile" },
@@ -54,22 +64,22 @@ type IUser = {
 };
 
 type NavbarProps = {
-    user: IUser
-}
+    user: IUser;
+};
 
 export function Navbar({ user }: NavbarProps) {
-    const router = useRouter()
-    const handleUserMenuAction = async (action: string) => {
+    const router = useRouter();
 
+    const handleUserMenuAction = async (action: string) => {
         if (action === "dashboard") {
-            if (user.data.profile.role === "CUSTOMER") {
-                router.push("/customer-dashboard")
-            }
-            else if (user.data.profile.role === "TECHNICIAN") {
-                router.push("/technician-dashboard")
-            }
-            else if (user.data.profile.role === "ADMIN") {
-                router.push("/admin-dashboard")
+            const role = user.data.profile.role;
+
+            if (role === "CUSTOMER") {
+                router.push("/customer-dashboard");
+            } else if (role === "TECHNICIAN") {
+                router.push("/technician-dashboard");
+            } else if (role === "ADMIN") {
+                router.push("/admin-dashboard");
             }
 
             return;
@@ -86,6 +96,7 @@ export function Navbar({ user }: NavbarProps) {
         <nav className="border-b border-border">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
+
                     {/* Logo */}
                     <Link href="/" className="shrink-0">
                         <span className="text-2xl font-bold text-primary">
@@ -93,8 +104,9 @@ export function Navbar({ user }: NavbarProps) {
                         </span>
                     </Link>
 
-                    {/* Nav Links */}
-                    <div className="hidden md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:flex md:items-center md:gap-8">
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center gap-8">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
@@ -106,56 +118,118 @@ export function Navbar({ user }: NavbarProps) {
                         ))}
                     </div>
 
-                    {/* User Dropdown */}
-                    {
-                        user.success ? (
+
+                    {/* Right Section */}
+                    <div className="flex items-center gap-3">
+
+                        {/* Mobile Menu */}
+                        <div className="md:hidden">
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                    >
+                                        <Menu className="h-5 w-5" />
+                                    </Button>
+                                </SheetTrigger>
+
+                                <SheetContent side="left">
+                                    <div className="mt-8 flex flex-col gap-5">
+
+                                        {navItems.map((item) => (
+                                            <SheetClose
+                                                asChild
+                                                key={item.href}
+                                            >
+                                                <Link
+                                                    href={item.href}
+                                                    className="text-lg font-medium hover:text-primary"
+                                                >
+                                                    {item.label}
+                                                </Link>
+                                            </SheetClose>
+                                        ))}
+
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
+
+
+                        {/* User Menu */}
+                        {user.success ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <div className="cursor-pointer">
+                                    <button className="cursor-pointer">
                                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                             <User className="w-4 h-4 text-primary" />
                                         </div>
-                                    </div>
+                                    </button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-56">
+
+                                <DropdownMenuContent
+                                    align="end"
+                                    className="w-56"
+                                >
                                     <DropdownMenuLabel className="font-normal">
                                         <div className="flex flex-col gap-1">
                                             <p className="text-sm font-medium">
-                                                {user.data?.profile.name}
+                                                {user.data.profile.name}
                                             </p>
+
                                             <p className="text-xs text-muted-foreground">
-                                                {user.data?.profile.email}
+                                                {user.data.profile.email}
                                             </p>
                                         </div>
                                     </DropdownMenuLabel>
+
                                     <DropdownMenuSeparator />
+
+
                                     {userMenuItems.map((item) => {
                                         const Icon = item.icon;
+
                                         return (
                                             <DropdownMenuItem
                                                 key={item.action}
-                                                onClick={() => handleUserMenuAction(item.action)}
+                                                onClick={() =>
+                                                    handleUserMenuAction(
+                                                        item.action
+                                                    )
+                                                }
                                             >
                                                 <Icon className="w-4 h-4 mr-2" />
-                                                <span>{item.label}</span>
+                                                {item.label}
                                             </DropdownMenuItem>
                                         );
                                     })}
+
+
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={async () => {
-                                        await handleUserMenuAction("logout");
-                                    }}>
+
+
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            handleUserMenuAction("logout")
+                                        }
+                                    >
                                         <LogOut className="w-4 h-4 mr-2" />
-                                        <span>Log out</span>
+                                        Log out
                                     </DropdownMenuItem>
+
                                 </DropdownMenuContent>
                             </DropdownMenu>
-                        ) : <Link href={"/login"} >
-                            <Button className="cursor-pointer">
-                                Login
-                            </Button>
-                        </Link>
-                    }
+                        ) : (
+                            <Link href="/login">
+                                <Button>
+                                    Login
+                                </Button>
+                            </Link>
+                        )}
+
+                    </div>
+
                 </div>
             </div>
         </nav>

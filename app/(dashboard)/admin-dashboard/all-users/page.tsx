@@ -26,7 +26,7 @@ export default async function AllUsersPage({ searchParams }: Props) {
 
     return (
         <div className="p-6 h-[calc(100vh-64px)] flex flex-col">
-            <div className="mb-6 flex items-start justify-between gap-4">
+            {/* <div className="mb-6 flex items-start justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold">All Users</h1>
                     <p className="text-muted-foreground">
@@ -35,6 +35,21 @@ export default async function AllUsersPage({ searchParams }: Props) {
                 </div>
 
                 <div className="w-full max-w-sm">
+                    <UserSearch />
+                </div>
+            </div> */}
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold">
+                        All Users
+                    </h1>
+
+                    <p className="text-muted-foreground">
+                        Manage all registered users.
+                    </p>
+                </div>
+
+                <div className="w-full sm:max-w-sm">
                     <UserSearch />
                 </div>
             </div>

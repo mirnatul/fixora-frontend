@@ -27,7 +27,7 @@ const features = [
 
 export default function FeatureSection() {
     return (
-        <section className="container py-16">
+        <section className="container py-16 mx-auto px-2">
             <div className="grid gap-6 md:grid-cols-3">
                 {features.map((feature) => {
                     const Icon = feature.icon;

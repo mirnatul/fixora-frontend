@@ -31,7 +31,7 @@ export default function TopTechnicians({
     topTechnicians,
 }: TopTechniciansProps) {
     return (
-        <section className="container py-16">
+        <section className="container py-16 mx-auto px-2">
             <div className="mb-8 flex items-center justify-between">
                 <div>
                     <h2 className="text-3xl font-bold">
