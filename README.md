@@ -1,36 +1,322 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fixora - Home Service Marketplace
 
-## Getting Started
+Fixora is a full-stack home service marketplace platform where customers can find professional technicians, book services, make payments, and leave reviews. Technicians can manage their services, availability, and bookings, while admins can monitor the entire platform.
 
-First, run the development server:
+## Live Links
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+| Platform | Link |
+| --- | --- |
+| Frontend | https://fixora-frontend-xi.vercel.app/ |
+| Backend API | https://fixora-backend-updated.vercel.app/ |
+
+---
+
+# Tech Stack
+
+## Frontend
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+- Server Actions
+- React 19
+- Stripe Checkout Integration
+
+## Backend
+
+- Node.js
+- Express.js
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+- JWT Authentication
+- Stripe Payment Gateway
+
+---
+
+# Project Architecture
+
+```
+Fixora
+
+Frontend (Next.js)
+        |
+        | REST API
+        |
+Backend (Express + TypeScript)
+        |
+        |
+PostgreSQL Database
+        |
+        |
+Prisma ORM
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Authentication
 
-## Learn More
+| Frontend Route | API Endpoint | Description |
+| --- | --- | --- |
+| `/login` | `/api/auth/login` | Login existing users |
+| `/register` | `/api/users/register` | Register new users |
 
-To learn more about Next.js, take a look at the following resources:
+Supported Roles:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Customer
+- Technician
+- Admin
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+# Public Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Home Page
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Frontend Route | API | Description |
+| --- | --- | --- |
+| `/` | - | Navbar, Banner, Features, Top Rated Services, Top Technicians, Footer |
+
+The homepage dynamically displays:
+
+- Top rated services
+- Top rated technicians
+
+---
+
+## Technicians
+
+| Frontend Route | API Endpoint | Description |
+| --- | --- | --- |
+| `/technicians` | `/api/technician` | Display all available technicians |
+| `/technicians/:technicianId` | `/api/technician/:technicianId` | Technician details, services and reviews |
+
+Users can:
+
+- Browse technicians
+- View technician profiles
+- See available services
+- Check customer reviews
+
+---
+
+## Services
+
+| Frontend Route | API Endpoint | Description |
+| --- | --- | --- |
+| `/services` | `/api/services` | Service listing with search, filters and pagination |
+
+Features:
+
+- Search by service name
+- Filter services
+- Pagination
+- Service grid view
+
+---
+
+# Customer Dashboard
+
+Customer dashboard allows customers to manage their profile, bookings, payments and reviews.
+
+| Frontend Route | API Endpoint | Method | Description |
+| --- | --- | --- | --- |
+| `/customer-dashboard/profile` | `/api/auth/me` | GET | View profile information |
+| `/customer-dashboard/profile` | `/api/auth/me/update` | PATCH | Update profile |
+| `/customer-dashboard/my-bookings` | `/api/bookings/user/:userId` | GET | View all bookings |
+| `/customer-dashboard/payment-history` | `/api/payment` | GET | Payment history |
+
+## Customer Actions
+
+| Method | API Endpoint | Description |
+| --- | --- | --- |
+| PATCH | `/api/bookings/cancel-booking/:bookingId` | Cancel booking |
+| POST | `/api/payment/checkout/:bookingId` | Create Stripe checkout session |
+| POST | `/api/review/:bookingId` | Submit service review |
+
+---
+
+# Technician Dashboard
+
+Technicians can manage their services, availability and customer bookings.
+
+| Frontend Route | API Endpoint | Description |
+| --- | --- | --- |
+| `/technician-dashboard` | `/api/technician/dashboard` | Dashboard statistics |
+| `/technician-dashboard/profile` | `/api/auth/me` | Manage technician profile |
+| `/technician-dashboard/bookings-i-get` | `/api/bookings/technician/:userId` | View received bookings |
+| `/technician-dashboard/my-services` | `/api/services/technician` | Manage services |
+| `/technician-dashboard/availability` | `/api/technician/availability` | Manage working slots |
+
+Dashboard Statistics:
+
+- Total bookings
+- Earnings
+- Completed booking rate
+- Booking status information
+
+## Technician Actions
+
+| Method | API Endpoint | Description |
+| --- | --- | --- |
+| PATCH | `/api/bookings/update-status/:bookingId` | Update booking status |
+
+Booking status flow:
+
+```
+PENDING
+   |
+ACCEPTED
+   |
+IN_PROGRESS
+   |
+COMPLETED
+```
+
+---
+
+# Admin Dashboard
+
+Admins can manage users, categories and monitor platform statistics.
+
+| Frontend Route | API Endpoint | Description |
+| --- | --- | --- |
+| `/admin-dashboard` | `/api/users/admin/stats` | Platform statistics |
+| `/admin-dashboard/profile` | `/api/auth/me` | Manage admin profile |
+| `/admin-dashboard/all-users` | `/api/users/admin/users` | Manage users |
+| `/admin-dashboard/all-categories` | `/api/category` | Manage categories |
+
+Admin Features:
+
+- View total users
+- View total technicians
+- View total bookings
+- View revenue
+- Ban/unban users
+- Create and update categories
+
+---
+
+# Payment System
+
+Fixora uses Stripe Checkout for secure online payments.
+
+Payment Flow:
+
+```
+Customer books service
+
+        ↓
+
+Booking created
+
+        ↓
+
+Stripe checkout session created
+
+        ↓
+
+Payment completed
+
+        ↓
+
+Booking status updated
+```
+
+---
+
+# Booking System
+
+Customers can:
+
+- Select service
+- Choose available date
+- Select available time slots
+- Provide address and notes
+- Complete payment
+- Review completed services
+
+
+Technicians can:
+
+- Accept bookings
+- Start service
+- Complete service
+
+
+---
+
+# Environment Variables
+
+## Backend
+
+```env
+DATABASE_URL=
+JWT_SECRET=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+APP_URL=
+```
+
+## Frontend
+
+```env
+NEXT_PUBLIC_API_URL=
+```
+
+---
+
+# Installation Guide
+
+## Clone Repository
+
+```bash
+git clone <repository-url>
+```
+
+---
+
+## Backend Setup
+
+```bash
+cd backend
+
+npm install
+
+npm run dev
+```
+
+---
+
+## Frontend Setup
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+---
+
+# Future Improvements
+
+- Customer dashboard analytics
+- Real-time chat between customer and technician
+- Push notifications
+- Technician verification system
+- Advanced search with location support
+- Mobile application
+
+---
+
+# Author
+
+**Lipon**
+
+Computer Science and Engineering Student  
+Full Stack Web Developer
