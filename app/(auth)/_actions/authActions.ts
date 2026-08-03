@@ -2,7 +2,6 @@
 
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-// install this and types also for ts
 import jwt, { JwtPayload } from "jsonwebtoken"
 
 type LoginState = {
@@ -39,7 +38,6 @@ export const loginAction = async (prevState: LoginState, formData: FormData) => 
     })
 
     const result = await res.json();
-    // console.log(result);
 
     // // cookie set
     if (result.success) {

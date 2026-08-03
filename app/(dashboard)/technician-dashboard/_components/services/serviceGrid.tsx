@@ -53,7 +53,6 @@ export default function ServicesGrid({
                 })}
             </div>
 
-            {/* Modals */}
             {selectedDescription && (
                 <DescriptionModal
                     title={selectedDescription.title}

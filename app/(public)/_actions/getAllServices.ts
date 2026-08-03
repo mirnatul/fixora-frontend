@@ -19,10 +19,6 @@ export const getAllServices = async (query?: QueryParams) => {
             }
         });
     }
-    // console.log(query);
-
-    // console.log(params.toString());
-
     const res = await fetch(
         `${process.env.BACKEND_API_URL}/api/services?${params.toString()}`,
         {

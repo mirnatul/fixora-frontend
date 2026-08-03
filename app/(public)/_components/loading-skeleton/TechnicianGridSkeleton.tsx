@@ -21,16 +21,12 @@ export function TechnicianGridSkeleton({
                             </div>
                         </div>
 
-                        {/* Rating */}
                         <Skeleton className="h-4 w-32" />
 
-                        {/* Experience */}
                         <Skeleton className="h-4 w-24" />
 
-                        {/* City */}
                         <Skeleton className="h-4 w-28" />
 
-                        {/* Button */}
                         <Skeleton className="h-10 w-full rounded-md" />
                     </CardContent>
                 </Card>

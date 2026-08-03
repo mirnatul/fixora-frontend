@@ -18,9 +18,7 @@ export default async function ProfilePage() {
                 </div>
             </div>
 
-            {/* <EditUserInfo profile={profile}></EditUserInfo> */}
             <ProfileCard profile={profile} />
-
 
             {profile.technicianProfile && (
                 <TechnicianCard technician={profile.technicianProfile} />

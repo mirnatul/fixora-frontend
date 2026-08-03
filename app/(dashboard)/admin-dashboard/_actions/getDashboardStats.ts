@@ -17,9 +17,5 @@ export const getDashboardStats = async () => {
         }
     );
 
-    // if (!res.ok) {
-    //     throw new Error("Failed to fetch dashboard statistics");
-    // }
-
     return await res.json();
 };

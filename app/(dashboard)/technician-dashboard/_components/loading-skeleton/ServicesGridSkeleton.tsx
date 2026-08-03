@@ -13,23 +13,20 @@ export default function ServicesGridSkeleton({
             {Array.from({ length: count }).map((_, index) => (
                 <Card key={index} className="flex h-full flex-col">
                     <CardContent className="space-y-4 p-6">
-                        {/* Title */}
+
                         <Skeleton className="h-6 w-3/4" />
 
-                        {/* Description */}
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-full" />
                             <Skeleton className="h-4 w-11/12" />
                             <Skeleton className="h-4 w-8/12" />
                         </div>
 
-                        {/* Badges */}
                         <div className="flex gap-2">
                             <Skeleton className="h-6 w-20 rounded-full" />
                             <Skeleton className="h-6 w-24 rounded-full" />
                         </div>
 
-                        {/* Price & Duration */}
                         <div className="space-y-2">
                             <Skeleton className="h-5 w-24" />
                             <Skeleton className="h-5 w-32" />

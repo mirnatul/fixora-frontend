@@ -17,17 +17,12 @@ export default async function TechnicianPage({ params }: {
     return (
         <main className="min-h-screen bg-background">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                {/* Header Section */}
                 <TechnicianHeader technician={technicianData.data} reviews={technicianData.data.reviews} />
 
-                {/* Services and Reviews Grid */}
                 <div className="mt-12 grid gap-12 lg:grid-cols-3">
-                    {/* Services Section */}
                     <div className="lg:col-span-2">
                         <TechnicianServices services={technicianData.data.service} userRole={userRole} />
                     </div>
-
-                    {/* Reviews Section */}
                     <div>
                         <TechnicianReviews reviews={technicianData.data.reviews} />
                     </div>

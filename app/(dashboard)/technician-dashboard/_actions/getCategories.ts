@@ -2,7 +2,6 @@
 
 import { cookies } from "next/headers";
 
-// export const getPublicNews = async ({ query }: { query?: { [key: string]: string | string[] | undefined } }) => {
 export const getCategories = async () => {
 
     const cookieStore = await cookies();

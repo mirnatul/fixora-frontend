@@ -24,11 +24,9 @@ export default function UserSearch() {
             if (search.trim()) {
                 params.set("searchTerm", search.trim());
             } else {
-                // Remove searchTerm when input is empty
                 params.delete("searchTerm");
             }
 
-            // Always go back to page 1 when searching
             params.set("page", "1");
 
             const nextUrl = `${pathname}?${params.toString()}`;

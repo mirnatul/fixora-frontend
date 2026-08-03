@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-// export const getPublicNews = async ({ query }: { query?: { [key: string]: string | string[] | undefined } }) => {
 export const updateService = async (serviceId: string, prevState: any, formData: FormData) => {
     const payload = {
         title: formData.get("title") as string,

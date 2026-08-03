@@ -2,13 +2,8 @@
 
 import { cookies } from "next/headers";
 
-// export const getPublicNews = async ({ query }: { query?: { [key: string]: string | string[] | undefined } }) => {
 export const getTechnicianServices = async (userId: string) => {
 
-    // const params = new URLSearchParams()
-    // if (query && query.searchTerm) {
-    //     params.set("searchTerm", query.searchTerm as string)
-    // }
 
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;

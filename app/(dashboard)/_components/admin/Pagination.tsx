@@ -28,7 +28,7 @@ export default function Pagination({ meta }: Props) {
 
     return (
         <div className="mt-6 flex items-center justify-center gap-2">
-            {/* Previous */}
+
             <Button
                 variant="outline"
                 size="icon"
@@ -38,7 +38,6 @@ export default function Pagination({ meta }: Props) {
                 <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            {/* Page Numbers */}
             {Array.from({ length: meta.totalPage }, (_, index) => {
                 const page = index + 1;
 
@@ -54,7 +53,6 @@ export default function Pagination({ meta }: Props) {
                 );
             })}
 
-            {/* Next */}
             <Button
                 variant="outline"
                 size="icon"

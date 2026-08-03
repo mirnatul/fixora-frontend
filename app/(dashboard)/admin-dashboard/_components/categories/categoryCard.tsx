@@ -69,7 +69,7 @@ export default function CategoryCard({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <div className="overflow-hidden rounded-lg border border-border bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-card">
-                {/* Header */}
+
                 <div className="border-b border-border p-5">
                     <h3 className="text-xl font-semibold text-foreground">
                         {category.name}
@@ -80,7 +80,6 @@ export default function CategoryCard({
                     </p>
                 </div>
 
-                {/* Footer */}
                 <div className="flex items-center justify-between p-4">
                     <span className="text-xs text-muted-foreground">
                         Created{" "}

@@ -279,7 +279,6 @@ export default function BookingActions({
                             />
                         </div>
 
-
                         <Button
                             onClick={handleSubmitReview}
                             disabled={pending}

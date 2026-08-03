@@ -4,13 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidateTag } from 'next/cache';
 
-// export const getPublicNews = async ({ query }: { query?: { [key: string]: string | string[] | undefined } }) => {
 export const cancelBooking = async (bookingId: string, userId: string) => {
-
-    // const params = new URLSearchParams()
-    // if (query && query.searchTerm) {
-    //     params.set("searchTerm", query.searchTerm as string)
-    // }
 
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
@@ -22,7 +16,6 @@ export const cancelBooking = async (bookingId: string, userId: string) => {
             Cookie: `accessToken=${accessToken}`,
             "Content-Type": "application/json",
         },
-        // revalidateTag(`user-bookings-${userId}`)
     })
 
     const result = await res.json();
@@ -30,18 +23,12 @@ export const cancelBooking = async (bookingId: string, userId: string) => {
         revalidateTag(`user-bookings-${userId}`, { expire: 0 })
     }
 
-    // console.log(result);
     return result;
 }
 
 
 // payment
 export const doPayment = async (bookingId: string, userId: string) => {
-    // console.log("Hit do payment");
-    // const params = new URLSearchParams()
-    // if (query && query.searchTerm) {
-    //     params.set("searchTerm", query.searchTerm as string)
-    // }
 
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
@@ -53,7 +40,6 @@ export const doPayment = async (bookingId: string, userId: string) => {
             Cookie: `accessToken=${accessToken}`,
             "Content-Type": "application/json",
         },
-        // revalidateTag(`user-bookings-${userId}`)
     })
 
     const result = await res.json();

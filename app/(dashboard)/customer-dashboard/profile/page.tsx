@@ -17,7 +17,6 @@ export default async function ProfilePage() {
                 </div>
             </div>
 
-            {/* <EditUserInfo profile={profile}></EditUserInfo> */}
             <ProfileCard profile={profile} />
         </div>
     );
