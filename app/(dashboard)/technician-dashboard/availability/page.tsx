@@ -1,9 +1,13 @@
-import React from 'react'
+import { getMe } from "@/service/getMe";
+import AvailabilityForm from "../_components/AvailabilityForm";
 
-const AvailabilityManagementPage = () => {
+export default async function AvailabilityPage() {
+    const user = await getMe();
+    const technicianId = user.data.profile.technicianProfile.id;
+
     return (
-        <div>AvailabilityManagementPage</div>
-    )
+        <div className="container mx-auto flex justify-center pt-10">
+            <AvailabilityForm technicianId={technicianId} />
+        </div>
+    );
 }
-
-export default AvailabilityManagementPage
