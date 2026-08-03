@@ -10,8 +10,10 @@ import TopTechnicians from "./_components/home/TopTechnicians";
 export default async function HomePage() {
   const topTechnicians = await getTopTechnicians();
   const topServices = await getTopServices();
+
   const user = await getMe();
-  const role = user.data.profile.role;
+  const role = user?.data?.profile?.role ?? null;
+
   return (
     <div className="max-w-350 mx-auto">
       <HeroSection />

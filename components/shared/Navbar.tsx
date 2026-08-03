@@ -72,7 +72,7 @@ export function Navbar({ user }: NavbarProps) {
 
     const handleUserMenuAction = async (action: string) => {
         if (action === "dashboard") {
-            const role = user.data.profile.role;
+            const role = user?.data?.profile?.role ?? null;
 
             if (role === "CUSTOMER") {
                 router.push("/customer-dashboard");
@@ -158,7 +158,7 @@ export function Navbar({ user }: NavbarProps) {
 
 
                         {/* User Menu */}
-                        {user.success ? (
+                        {user?.success ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <button className="cursor-pointer">

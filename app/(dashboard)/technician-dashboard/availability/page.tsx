@@ -3,7 +3,7 @@ import AvailabilityForm from "../_components/AvailabilityForm";
 
 export default async function AvailabilityPage() {
     const user = await getMe();
-    const technicianId = user.data.profile.technicianProfile.id;
+    const technicianId = user?.data?.profile?.technicianProfile?.id ?? null;
 
     return (
         <div className="container mx-auto flex justify-center pt-10">

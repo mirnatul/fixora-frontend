@@ -5,7 +5,7 @@ import TechnicianCard from "../_components/TechnicianCard";
 export default async function ProfilePage() {
     const result = await getMe();
 
-    const profile = result.data.profile;
+    const profile = result?.data?.profile ?? null;
 
     return (
         <div className="max-w-5xl mx-auto p-6 space-y-6">

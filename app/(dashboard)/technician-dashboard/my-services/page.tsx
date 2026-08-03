@@ -6,7 +6,7 @@ import CreateServiceDialog from "../_components/services/CreateServiceDialog";
 
 export default async function MyServicePage() {
     const me = await getMe();
-    const userId = me.data.profile.id;
+    const userId = me?.data?.profile?.id ?? null;
 
     const services = await getTechnicianServices(userId);
     const categories = await getCategories();

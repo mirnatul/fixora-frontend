@@ -6,7 +6,7 @@ import BookingTableSkeleton from "../_components/loading-skeleton/MyBookingSkele
 
 export default async function MyBookingsPage() {
     const user = await getMe();
-    const userId = user.data.profile.id;
+    const userId = user?.data?.profile?.id ?? null;
     // console.log(userId);
     const result = await getMyBookings(userId);
 

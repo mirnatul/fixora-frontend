@@ -12,7 +12,7 @@ export default async function TechnicianPage({ params }: {
     const { id } = await params;
     const technicianData = await getTechnicianDetails(id as string);
     const user = await getMe()
-    const userRole = user.data.profile.role;
+    const userRole = user?.data?.profile?.role ?? null;
     // console.log(technicianData);
     return (
         <main className="min-h-screen bg-background">

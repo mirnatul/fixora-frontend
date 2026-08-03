@@ -4,9 +4,8 @@ import { getBookingsIGet } from "../_actions/getBookingsIGet";
 
 export default async function BookingsIGet() {
     const user = await getMe();
-    const technicianId = user.data.profile.technicianProfile.id;
-    console.log(technicianId);
-    // const result = await getMyBookings(userId);
+    const technicianId = user?.data?.profile?.technicianProfile?.id ?? null;
+
     const result = await getBookingsIGet(technicianId)
 
 

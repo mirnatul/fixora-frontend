@@ -26,7 +26,7 @@ export default async function Home({ searchParams }: HomeProps) {
         getMe(),
     ]);
 
-    const { role } = me.data.profile;
+    const role = me?.data?.profile?.role ?? null;
 
     return (
         <main className="min-h-screen bg-background">
@@ -52,7 +52,7 @@ export default async function Home({ searchParams }: HomeProps) {
                     services={SERVICES_DATA.data.services}
                     meta={SERVICES_DATA.data.meta}
                     userRole={role}
-                    isLoggedIn
+                    isLoggedIn={!!me?.data?.profile}
                 />
             </div>
         </main>

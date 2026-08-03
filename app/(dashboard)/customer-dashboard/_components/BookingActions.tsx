@@ -45,7 +45,7 @@ export default function BookingActions({
 
         try {
             const user = await getMe();
-            const userId = user.data.profile.id;
+            const userId = user?.data?.profile?.id ?? null;
 
             const result = await cancelBooking(id, userId);
 
@@ -72,7 +72,7 @@ export default function BookingActions({
 
         try {
             const user = await getMe();
-            const userId = user.data.profile.id;
+            const userId = user?.data?.profile?.id ?? null;
 
             const result = await doPayment(id, userId);
 
@@ -108,7 +108,7 @@ export default function BookingActions({
 
         try {
             const user = await getMe();
-            const userId = user.data.profile.id;
+            const userId = user?.data?.profile?.id ?? null;
 
             const payload = {
                 rating,

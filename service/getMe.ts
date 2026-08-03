@@ -9,8 +9,9 @@ export const getMe = async () => {
     if (!accessToken) {
         return {
             success: false,
+            data: null,
             message: "User not logged in!"
-        }
+        };
     }
 
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/me`, {
