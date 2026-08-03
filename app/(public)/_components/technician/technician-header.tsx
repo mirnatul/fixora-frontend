@@ -1,5 +1,6 @@
 import { MapPin, Phone, Mail, CheckCircle2 } from 'lucide-react'
 import { Star } from 'lucide-react'
+import Image from 'next/image'
 
 interface TechnicianHeaderProps {
 
@@ -57,10 +58,13 @@ export function TechnicianHeader({ technician, reviews }: TechnicianReviewsProps
                 <div className="flex shrink-0 items-start">
                     <div className="relative h-24 w-24 rounded-full bg-gradient-to from-primary to-primary/60 flex items-center justify-center text-2xl font-bold text-white">
                         {technician.user.profileImage ? (
-                            <img
+                            <Image
                                 src={technician.user.profileImage}
                                 alt={technician.user.name}
+                                width={64}
+                                height={64}
                                 className="h-full w-full rounded-full object-cover"
+                                unoptimized
                             />
                         ) : (
                             initials

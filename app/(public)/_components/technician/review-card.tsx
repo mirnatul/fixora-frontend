@@ -1,6 +1,7 @@
 "use client";
 
 import { Star } from "lucide-react";
+import Image from "next/image";
 
 interface ReviewCardProps {
     review: {
@@ -22,10 +23,13 @@ export function ReviewCard({ review }: ReviewCardProps) {
                 <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                         {review.customer.profileImage ? (
-                            <img
+                            <Image
                                 src={review.customer.profileImage}
                                 alt={review.customer.name}
+                                width={64}
+                                height={64}
                                 className="h-full w-full object-cover"
+                                unoptimized
                             />
                         ) : (
                             review.customer.name.charAt(0).toUpperCase()

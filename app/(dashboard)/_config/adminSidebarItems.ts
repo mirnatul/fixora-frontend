@@ -25,16 +25,6 @@ export const ADMIN_SIDEBAR_ITEMS: ISidebarItem[] = [
         icon: Users,
     },
     {
-        label: "All Technicians",
-        href: "/admin-dashboard/all-technicians",
-        icon: Wrench,
-    },
-    {
-        label: "All Bookings",
-        href: "/admin-dashboard/all-bookings",
-        icon: CalendarCheck,
-    },
-    {
         label: "All Categories",
         href: "/admin-dashboard/all-categories",
         icon: Tags,

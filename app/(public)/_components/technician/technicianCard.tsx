@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Star } from "lucide-react";
+import Image from "next/image";
 
 interface Technician {
     id: string;
@@ -30,10 +31,13 @@ export function TechnicianCard({
         <div className="rounded-xl border bg-card p-6">
             <div className="flex items-center gap-4">
                 {technician.user.profileImage ? (
-                    <img
+                    <Image
                         src={technician.user.profileImage}
                         alt={technician.user.name}
+                        width={64}
+                        height={64}
                         className="h-16 w-16 rounded-full object-cover"
+                        unoptimized
                     />
                 ) : (
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-semibold text-primary-foreground">

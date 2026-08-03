@@ -8,13 +8,14 @@ import { useActionState } from "react";
 import { updateUserInfo } from "../_actions/updateUserInfo";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 type ProfileCardProps = {
     profile: {
         name: string;
         email: string;
         phone: string;
-        profileImage: string | null;
+        profileImage: string;
         address: string;
         city: string;
         role: string;
@@ -26,16 +27,6 @@ type ProfileCardProps = {
 const initialState = {
     success: false,
     message: "",
-};
-
-type Props = {
-    profile: {
-        name: string;
-        phone: string;
-        address: string;
-        city: string;
-        profileImage: string | null;
-    };
 };
 
 export default function ProfileCard({ profile }: ProfileCardProps) {
@@ -62,10 +53,13 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
                     <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
                         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border bg-muted text-3xl font-bold">
                             {profile.profileImage ? (
-                                <img
+                                <Image
                                     src={profile.profileImage}
                                     alt={profile.name}
+                                    width={64}
+                                    height={64}
                                     className="h-full w-full object-cover"
+                                    unoptimized
                                 />
                             ) : (
                                 profile.name.charAt(0).toUpperCase()

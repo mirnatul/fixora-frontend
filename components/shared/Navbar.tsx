@@ -20,8 +20,7 @@ import { logout } from "@/service/logout";
 const navItems = [
     { label: "Home", href: "/" },
     { label: "Technicians", href: "/technicians" },
-    { label: "Services", href: "/services" },
-    { label: "Categories", href: "/categories" }
+    { label: "Services", href: "/services" }
 ];
 
 // User menu items configuration
