@@ -83,5 +83,8 @@ export const registerAction = async (prevStore: RegisterPayload, formData: FormD
     })
 
     const result = await res.json();
+    if (result.success) {
+        redirect("/login");
+    }
     return result;
 }

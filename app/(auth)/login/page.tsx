@@ -1,39 +1,41 @@
 import { LoginForm } from "../_components/LoginForm"
 
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardAction,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
 export default function LoginPage() {
 
     return (
-        <div>
-            <div
-                className="flex min-h-screen items-center justify-center">
-                <Card className="w-full max-w-sm">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-bold">Login to your account</CardTitle>
-                        <CardDescription>
-                            Enter your email below to login to your account
-                        </CardDescription>
-                        <CardAction>
-                            <Link href="/register">
-                                <Button variant="link">Register</Button>
-                            </Link>
-                        </CardAction>
-                    </CardHeader>
-                    <CardContent>
-                        <LoginForm></LoginForm>
-                    </CardContent>
-                </Card>
+        <div className="relative min-h-svh bg-muted/30">
+            <Link
+                href="/"
+                className="absolute left-4 top-4 z-20 flex items-center gap-2 text-sm font-medium md:left-8 md:top-8"
+            >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+            </Link>
+
+            <div className="flex min-h-svh items-center justify-center p-4 md:p-8">
+                <div className="hidden aspect-video w-full max-w-7xl overflow-hidden rounded-3xl border bg-card shadow-2xl lg:grid lg:grid-cols-2">
+                    <div className="relative">
+                        <img
+                            src="/auth-image.png"
+                            alt="Fixora"
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
+                    {/* Laptop and Tablet */}
+                    <div className="flex items-center justify-center p-10 xl:p-16">
+                        <div className="w-full max-w-md">
+                            <LoginForm />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Mobile */}
+                <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-xl lg:hidden">
+                    <LoginForm />
+                </div>
             </div>
         </div>
     )
