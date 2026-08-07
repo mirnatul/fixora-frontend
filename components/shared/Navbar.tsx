@@ -27,6 +27,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 const navItems = [
     { label: "Home", href: "/" },
@@ -94,12 +95,21 @@ export function Navbar({ user }: NavbarProps) {
 
     return (
         <nav className="border-b border-border">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
+                <div className="flex items-center justify-between h-16 md:h-20">
 
                     {/* Logo */}
-                    <Link href="/" className="shrink-0">
-                        <span className="text-2xl font-bold text-primary">
+                    <Link href="/" className="flex items-center gap-2 shrink-0">
+                        <Image
+                            src="/logo.png"
+                            alt="Fixora Logo"
+                            width={36}
+                            height={36}
+                            className="h-12 w-12"
+                            unoptimized
+                        />
+
+                        <span className="hidden sm:block text-4xl font-bold text-primary ml-3">
                             Fixora
                         </span>
                     </Link>
@@ -119,24 +129,36 @@ export function Navbar({ user }: NavbarProps) {
                     </div>
 
 
-                    {/* Right Section */}
-                    <div className="flex items-center gap-3">
-
-                        {/* Mobile Menu */}
+                    {/* Mobile Menu */}
+                    <div className="flex items-center gap-4">
                         <div className="md:hidden">
                             <Sheet>
                                 <SheetTrigger asChild>
                                     <Button
                                         variant="ghost"
                                         size="icon"
+                                        className="h-9 w-9 rounded-full"
                                     >
-                                        <Menu className="h-5 w-5" />
+                                        <Menu className="h-6! w-6!" />
                                     </Button>
                                 </SheetTrigger>
 
-                                <SheetContent side="left">
-                                    <div className="mt-8 flex flex-col gap-5">
+                                <SheetContent
+                                    side="left"
+                                    className="w-70 px-6"
+                                >
+                                    {/* Mobile Menu Header */}
+                                    <div className="mt-8 mb-8">
+                                        <h2 className="text-xl font-bold text-[#007A55]">
+                                            Fixora
+                                        </h2>
+                                        <p className="mt-1 text-sm text-muted-foreground">
+                                            Home services, made simple.
+                                        </p>
+                                    </div>
 
+                                    {/* Navigation */}
+                                    <nav className="flex flex-col gap-2">
                                         {navItems.map((item) => (
                                             <SheetClose
                                                 asChild
@@ -144,91 +166,101 @@ export function Navbar({ user }: NavbarProps) {
                                             >
                                                 <Link
                                                     href={item.href}
-                                                    className="text-lg font-medium hover:text-primary"
+                                                    className="rounded-lg px-3 py-3 text-base font-medium transition-colors hover:bg-primary/10 hover:text-primary"
                                                 >
                                                     {item.label}
                                                 </Link>
                                             </SheetClose>
                                         ))}
-
-                                    </div>
+                                    </nav>
                                 </SheetContent>
                             </Sheet>
                         </div>
-
 
                         {/* User Menu */}
                         {user?.success ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <button className="cursor-pointer">
-                                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                            <User className="w-4 h-4 text-primary" />
+                                    <button
+                                        className="cursor-pointer rounded-full p-1 transition-colors hover:bg-muted focus:outline-none"
+                                        aria-label="Open user menu"
+                                    >
+                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                                            <User className="h-4 w-4 text-primary" />
                                         </div>
                                     </button>
                                 </DropdownMenuTrigger>
 
                                 <DropdownMenuContent
                                     align="end"
-                                    className="w-56"
+                                    sideOffset={8}
+                                    className="w-64 rounded-xl p-2"
                                 >
-                                    <DropdownMenuLabel className="font-normal">
-                                        <div className="flex flex-col gap-1">
-                                            <p className="text-sm font-medium">
-                                                {user.data.profile.name}
-                                            </p>
+                                    {/* User Information */}
+                                    <DropdownMenuLabel className="px-3 py-3 font-normal">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                                                <User className="h-5 w-5 text-primary" />
+                                            </div>
 
-                                            <p className="text-xs text-muted-foreground">
-                                                {user.data.profile.email}
-                                            </p>
+                                            <div className="min-w-0">
+                                                <p className="truncate text-sm font-semibold">
+                                                    {user.data.profile.name}
+                                                </p>
+
+                                                <p className="truncate text-xs text-muted-foreground">
+                                                    {user.data.profile.email}
+                                                </p>
+                                            </div>
                                         </div>
                                     </DropdownMenuLabel>
 
-                                    <DropdownMenuSeparator />
+                                    <DropdownMenuSeparator className="my-1" />
 
+                                    {/* User Menu Items */}
+                                    <div className="space-y-1">
+                                        {userMenuItems.map((item) => {
+                                            const Icon = item.icon;
 
-                                    {userMenuItems.map((item) => {
-                                        const Icon = item.icon;
+                                            return (
+                                                <DropdownMenuItem
+                                                    key={item.action}
+                                                    onClick={() =>
+                                                        handleUserMenuAction(item.action)
+                                                    }
+                                                    className="cursor-pointer rounded-lg px-3 py-2.5"
+                                                >
+                                                    <Icon className="mr-3 h-4 w-4" />
+                                                    <span>{item.label}</span>
+                                                </DropdownMenuItem>
+                                            );
+                                        })}
+                                    </div>
 
-                                        return (
-                                            <DropdownMenuItem
-                                                key={item.action}
-                                                onClick={() =>
-                                                    handleUserMenuAction(
-                                                        item.action
-                                                    )
-                                                }
-                                            >
-                                                <Icon className="w-4 h-4 mr-2" />
-                                                {item.label}
-                                            </DropdownMenuItem>
-                                        );
-                                    })}
+                                    <DropdownMenuSeparator className="my-1" />
 
-
-                                    <DropdownMenuSeparator />
-
-
+                                    {/* Logout */}
                                     <DropdownMenuItem
                                         onClick={() =>
                                             handleUserMenuAction("logout")
                                         }
+                                        className="cursor-pointer rounded-lg px-3 py-2.5 text-red-600 focus:bg-red-50 focus:text-red-600"
                                     >
-                                        <LogOut className="w-4 h-4 mr-2" />
-                                        Log out
+                                        <LogOut className="mr-3 h-4 w-4" />
+                                        <span>Log out</span>
                                     </DropdownMenuItem>
-
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
                             <Link href="/login">
-                                <Button>
+                                <Button className="rounded-lg px-5">
                                     Login
                                 </Button>
                             </Link>
                         )}
-
                     </div>
+
+
 
                 </div>
             </div>

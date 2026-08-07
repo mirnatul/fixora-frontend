@@ -15,11 +15,11 @@ export default async function HomePage() {
   const role = user?.data?.profile?.role ?? null;
 
   return (
-    <div className="max-w-350 mx-auto">
-      <HeroSection />
-      <FeatureSection />
-      <TopServices topServices={topServices.data} role={role} />
-      <TopTechnicians topTechnicians={topTechnicians.data} />
+    <div>
+      <div className="max-w-350 mx-auto"><HeroSection /></div>
+      <div className="max-w-350 mx-auto"><FeatureSection /></div>
+      <div className="max-w-350 mx-auto"><TopServices topServices={topServices.data} role={role} /></div>
+      <div className="max-w-350 mx-auto"><TopTechnicians topTechnicians={topTechnicians.data} /></div>
       <Footer />
     </div>
   );
