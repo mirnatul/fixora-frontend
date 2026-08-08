@@ -94,8 +94,8 @@ export function Navbar({ user }: NavbarProps) {
     };
 
     return (
-        <nav className="border-b border-border">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
+        <nav className="">
+            <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-0">
                 <div className="flex items-center justify-between h-16 md:h-20">
 
                     {/* Logo */}
@@ -253,8 +253,12 @@ export function Navbar({ user }: NavbarProps) {
                             </DropdownMenu>
                         ) : (
                             <Link href="/login">
-                                <Button className="rounded-lg px-5">
-                                    Login
+                                <Button
+                                    className="login-cta relative overflow-hidden rounded-lg bg-white! hover:bg-white! text-[#007A55]! hover:text-[#007A55]! px-5 cursor-pointer hover:scale-105">
+                                    <span className="snake-line" />
+                                    <span className="relative z-10 font-semibold">
+                                        Log in
+                                    </span>
                                 </Button>
                             </Link>
                         )}

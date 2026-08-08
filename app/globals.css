@@ -129,3 +129,100 @@
     @apply font-sans;
   }
 }
+
+
+
+
+
+/* login button */
+/* Moving light around the border */
+.snake-border {
+  background: conic-gradient(from 0deg,
+      transparent 0deg,
+      transparent 275deg,
+      rgba(0, 122, 85, 0.15) 300deg,
+      rgba(0, 122, 85, 0.5) 330deg,
+      #007a55 350deg,
+      white 360deg);
+
+  animation: snake-border 1.8s linear infinite;
+}
+
+@keyframes snake-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.snake-line {
+  position: absolute;
+  inset: -3px;
+
+  border-radius: 10px;
+
+  background: linear-gradient(90deg,
+      transparent,
+      #ffffff,
+      #8bf8d9,
+      transparent);
+
+  background-size: 300% 100%;
+
+  animation: snake-move 20s linear infinite;
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes snake-move {
+  from {
+    background-position: 300% 0;
+  }
+
+  to {
+    background-position: -300% 0;
+  }
+}
+
+
+/* Login CTA animation */
+.login-cta {
+  animation: login-attention 5s ease-in-out infinite;
+}
+
+@keyframes login-attention {
+
+  /* idle time */
+  0%,
+  82%,
+  100% {
+    transform: translateX(0);
+  }
+
+  /* soft shake */
+  84% {
+    transform: translateX(-3px) rotate(-0.5deg);
+  }
+
+  86% {
+    transform: translateX(3px) rotate(0.5deg);
+  }
+
+  88% {
+    transform: translateX(-2px) rotate(-0.3deg);
+  }
+
+  90% {
+    transform: translateX(2px) rotate(0.3deg);
+  }
+
+  92% {
+    transform: translateX(0);
+  }
+}
+
+.login-cta:hover,
+.login-cta:hover * {
+  animation-play-state: paused;
+}

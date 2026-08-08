@@ -16,7 +16,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <div className="max-w-350 mx-auto"><HeroSection /></div>
+      <div className="max-w-screen mx-auto"><HeroSection user={user} /></div>
       <div className="max-w-350 mx-auto"><FeatureSection /></div>
       <div className="max-w-350 mx-auto"><TopServices topServices={topServices.data} role={role} /></div>
       <div className="max-w-350 mx-auto"><TopTechnicians topTechnicians={topTechnicians.data} /></div>
