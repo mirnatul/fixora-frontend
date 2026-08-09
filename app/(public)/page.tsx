@@ -10,6 +10,9 @@ import TopCategories from "./_components/home/TopCategories";
 import HowItWorks from "./_components/home/HowItWorks";
 import WhyChooseUs from "./_components/home/WhyChooseUs";
 import SpecialOffer from "./_components/home/SpecialOffer";
+import Statistics from "./_components/home/Statistics";
+import Reviews from "./_components/home/Reviews";
+import TipsAndUpdates from "./_components/home/TipsAndUpdates";
 
 export default async function HomePage() {
   const topTechnicians = await getTopTechnicians();
@@ -28,6 +31,9 @@ export default async function HomePage() {
       <div><SpecialOffer></SpecialOffer></div>
       <div className="max-w-350 mx-auto"><TopServices topServices={topServices.data} role={role} /></div>
       <div className="max-w-350 mx-auto"><TopTechnicians topTechnicians={topTechnicians.data} /></div>
+      <div><Statistics></Statistics></div>
+      <div><Reviews></Reviews></div>
+      <div><TipsAndUpdates></TipsAndUpdates></div>
       <Footer />
     </div>
   );

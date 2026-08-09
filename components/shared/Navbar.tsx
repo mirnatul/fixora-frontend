@@ -34,7 +34,7 @@ const navItems = [
     { label: "Technicians", href: "/technicians" },
     { label: "Services", href: "/services" },
     { label: "About Us", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: "Articles", href: "/articles" },
 ];
 
 const userMenuItems = [
