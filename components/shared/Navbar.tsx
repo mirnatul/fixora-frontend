@@ -252,10 +252,35 @@ export function Navbar({ user }: NavbarProps) {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
+                            // <Link href="/login">
+                            //     <Button
+                            //         className="login-cta relative overflow-hidden rounded-lg bg-white! hover:bg-white! text-[#007A55]! hover:text-[#007A55]! px-5 cursor-pointer hover:scale-105">
+                            //         <span className="snake-line" />
+                            //         <span className="relative z-10 font-semibold">
+                            //             Log in
+                            //         </span>
+                            //     </Button>
+                            // </Link>
                             <Link href="/login">
                                 <Button
-                                    className="login-cta relative overflow-hidden rounded-lg bg-white! hover:bg-white! text-[#007A55]! hover:text-[#007A55]! px-5 cursor-pointer hover:scale-105">
+                                    className="
+            login-cta
+            relative
+            overflow-hidden
+            rounded-lg
+            border-2
+            border-[#007A55]!
+            bg-white!
+            px-5
+            text-[#007A55]!
+            hover:bg-white!
+            hover:text-[#007A55]!
+            cursor-pointer
+            hover:scale-105
+        "
+                                >
                                     <span className="snake-line" />
+
                                     <span className="relative z-10 font-semibold">
                                         Log in
                                     </span>
