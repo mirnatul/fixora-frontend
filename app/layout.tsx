@@ -9,6 +9,12 @@ const manropeHeading = Manrope({ subsets: ['latin'], variable: '--font-heading' 
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Fixora",
+  description: "Home Service Marketplace",
+};
 
 export default async function RootLayout({
   children,

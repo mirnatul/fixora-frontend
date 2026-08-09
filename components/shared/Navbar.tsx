@@ -33,6 +33,8 @@ const navItems = [
     { label: "Home", href: "/" },
     { label: "Technicians", href: "/technicians" },
     { label: "Services", href: "/services" },
+    { label: "About Us", href: "/about" },
+    { label: "Contact", href: "/contact" },
 ];
 
 const userMenuItems = [
@@ -103,13 +105,13 @@ export function Navbar({ user }: NavbarProps) {
                         <Image
                             src="/logo.png"
                             alt="Fixora Logo"
-                            width={36}
-                            height={36}
-                            className="h-12 w-12"
+                            width={60}
+                            height={66}
+                            className=""
                             unoptimized
                         />
 
-                        <span className="hidden sm:block text-4xl font-bold text-primary ml-3">
+                        <span className="hidden sm:block text-4xl font-bold ml-1">
                             Fixora
                         </span>
                     </Link>

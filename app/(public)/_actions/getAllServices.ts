@@ -5,7 +5,6 @@ type QueryParams = {
 };
 
 export const getAllServices = async (query?: QueryParams) => {
-    console.log("get all service called", query);
     const params = new URLSearchParams();
 
     if (query) {
@@ -27,8 +26,5 @@ export const getAllServices = async (query?: QueryParams) => {
     );
 
     const result = await res.json();
-
-    console.log("API URL:", `${process.env.BACKEND_API_URL}/api/services?${params.toString()}`);
-    console.log("Backend response:", result);
     return result;
 };

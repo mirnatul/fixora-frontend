@@ -29,8 +29,7 @@ export default function HeroSection({ user }: any) {
     }, []);
 
     return (
-
-        <div className="relative min-h-screen bg-green-50">
+        <div className="relative bg-green-50">
             <div
                 className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${scrolled
                     ? "bg-white/95 shadow-md backdrop-blur-md"
@@ -41,10 +40,10 @@ export default function HeroSection({ user }: any) {
             </div>
 
             {/* Hero */}
-            <section className="min-h-screen">
-                <div className="grid min-h-screen lg:grid-cols-[60%_40%] overflow-visible">
+            <section className="relative">
+                <div className="grid min-h-[78vh] lg:grid-cols-[60%_40%] overflow-visible">
                     <div className="
-                        min-h-[calc(100vh-80px)]
+                        min-h-[78vh]
                         flex
                         items-center
                         pl-5
@@ -190,67 +189,7 @@ export default function HeroSection({ user }: any) {
                                         title="24/7 Support"
                                         description="We're here to help"
                                     />
-
                                 </div>
-
-                                {/* Customer Trust */}
-                                {/* <div
-                                    className="flex items-center gap-6 rounded-2xl bg-white/50 p-3 backdrop-blur-sm">
-
-                                    <div className="flex -space-x-3">
-
-                                        <Avatar className="h-11 w-11 border-2 border-white">
-                                            <AvatarImage src="/images/user/user-4.jpg" />
-                                            <AvatarFallback>U</AvatarFallback>
-                                        </Avatar>
-
-                                        <Avatar className="h-11 w-11 border-2 border-white">
-                                            <AvatarImage src="/images/user/user-5.jpg" />
-                                            <AvatarFallback>U</AvatarFallback>
-                                        </Avatar>
-
-                                        <Avatar className="h-11 w-11 border-2 border-white">
-                                            <AvatarImage src="/images/user/user-6.jpg" />
-                                            <AvatarFallback>U</AvatarFallback>
-                                        </Avatar>
-
-                                        <Avatar className="h-11 w-11 border-2 border-white">
-                                            <AvatarImage src="/images/user/user-7.jpg" />
-                                            <AvatarFallback>U</AvatarFallback>
-                                        </Avatar>
-                                    </div>
-
-                                    <div className="flex items-center gap-3">
-                                        <div
-                                            className="
-                                                flex
-                                                h-14
-                                                w-14
-                                                flex-col
-                                                items-center
-                                                justify-center
-                                                rounded-full
-                                                bg-[#05a071]
-                                                text-white
-                                                shadow-md
-                                        ">
-                                            <span className="font-bold">
-                                                4.8
-                                            </span>
-                                            <span className="text-xs">
-                                                ⭐
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-900">
-                                                4.8/5 from 1200+ customers
-                                            </p>
-                                            <p className="text-sm text-muted-foreground">
-                                                Your satisfaction is our priority
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -332,51 +271,8 @@ export default function HeroSection({ user }: any) {
                                 unoptimized
                                 priority
                             />
-
-                            <div className="absolute left-[10%] top-[85%] flex items-center gap-4 rounded-xl bg-white px-8 py-6 shadow-lg">
-
-                                <div className="flex gap-2 max-w-54">
-                                    {/* Man icon */}
-                                    <div
-                                        className=" flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E8FFF7] text-[#007A55] text-2xl">
-
-                                        <ShieldCheckIcon className="h-5 w-5 text-[#007A55]" />
-                                    </div>
-                                    {/* Text */}
-                                    <div>
-                                        <p className="text-sm font-bold text-gray-900">
-                                            100% Safe & Secure
-                                        </p>
-                                        <p className="text-xs text-gray-500 mt-2">
-                                            Your data and payments are always protected.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="h-20 border-l border-dashed border-gray-300" />
-
-                                <div className="flex gap-2 max-w-54">
-                                    {/* Man icon */}
-                                    <div
-                                        className=" flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E8FFF7] text-[#007A55] text-2xl">
-
-                                        <Award className="h-5 w-5 text-[#007A55]" />
-                                    </div>
-                                    {/* Text */}
-                                    <div>
-                                        <p className="text-sm font-bold text-gray-900">
-                                            Best Price Guranted
-                                        </p>
-                                        <p className="text-xs text-gray-500 mt-2">
-                                            Get the best qualilty service at the best price.
-                                        </p>
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
                     </div>
-
                 </div>
             </section>
         </div>
