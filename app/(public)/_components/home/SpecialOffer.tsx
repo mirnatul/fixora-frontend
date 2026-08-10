@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 const SpecialOffer = () => {
     return (
         <section className="w-full bg-[#007A55]">
-            <div className="mx-auto flex min-h-[220px] w-full max-w-[1400px] flex-col items-center overflow-hidden px-5 py-8 sm:px-8 md:py-10 lg:min-h-[220px] lg:flex-row lg:px-10 lg:py-0">
+            <div className="mx-auto flex min-h-55 w-full max-w-350 flex-col items-center overflow-hidden px-5 py-8 sm:px-8 md:py-10 lg:min-h-55 lg:flex-row lg:px-10 lg:py-0">
 
                 {/* LEFT — Offer Content */}
                 <div className="z-10 flex w-full flex-1 flex-col justify-center text-center lg:text-left">
@@ -30,7 +30,7 @@ const SpecialOffer = () => {
                 </div>
 
                 {/* CENTER — Image */}
-                <div className="relative mt-6 h-[160px] w-full max-w-[360px] shrink-0 overflow-hidden sm:h-[180px] md:max-w-[420px] lg:mt-0 lg:h-[220px] lg:w-[360px]">
+                <div className="relative mt-6 h-40 w-full max-w-90 shrink-0 overflow-hidden sm:h-45 md:max-w-105 lg:mt-0 lg:h-55 lg:w-90">
                     <Image
                         src="/images/home/offer.jpg"
                         alt="Fixora special offer"

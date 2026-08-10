@@ -42,7 +42,7 @@ const WhyChooseUs = () => {
                             <img
                                 src="/images/home/thumbsup.png"
                                 alt="Fixora professional providing home service"
-                                className="h-[360px] w-full object-cover"
+                                className="h-90 w-full object-cover"
                             />
                         </div>
 

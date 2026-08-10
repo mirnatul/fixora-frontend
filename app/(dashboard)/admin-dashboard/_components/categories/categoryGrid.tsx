@@ -1,22 +1,25 @@
 "use client";
 
-import CategoryCard from "./categoryCard";
+import CategoryCard from "./CategoryCard";
+
 
 interface Category {
     id: string;
     name: string;
     description: string;
+    imageUrl: string | null;
+    imagePublicId: string | null;
     createdAt: string;
     updatedAt: string;
 }
 
-interface CategoriesGridProps {
+interface CategoryGridProps {
     categories: Category[];
 }
 
-export default function CategoriesGrid({
+export default function CategoryGrid({
     categories,
-}: CategoriesGridProps) {
+}: CategoryGridProps) {
     return (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {categories.map((category) => (

@@ -35,24 +35,6 @@ const HowItWorks = () => {
             <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
 
                 {/* ================= HEADER ================= */}
-                {/* <div className="mx-auto mb-16 max-w-2xl text-center">
-                    <span className="inline-flex items-center rounded-full border border-[#BFEBDD] bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#007A55] shadow-sm">
-                        How it works
-                    </span>
-
-                    <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
-                        Get your work done in{" "}
-                        <span className="text-[#007A55]">
-                            3 easy steps
-                        </span>
-                    </h2>
-
-                    <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-gray-500 sm:text-base">
-                        Simple, fast and reliable process from booking to completion.
-                    </p>
-                </div> */}
-                {/* ================= HEADER ================= */}
-                {/* ================= HEADER ================= */}
                 <div className="mx-auto mb-10 max-w-2xl text-center">
                     <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#007A55]">
                         Simple process
@@ -110,10 +92,10 @@ const HowItWorks = () => {
                                     <div className="relative z-10 mt-8 flex h-24 w-24 items-center justify-center rounded-full border border-[#C8F2E2] bg-[#F5FFFB] shadow-sm">
 
                                         {/* Outer ring */}
-                                        <div className="flex h-[76px] w-[76px] items-center justify-center rounded-full border border-[#D5F5EA] bg-white">
+                                        <div className="flex h-19 w-19 items-center justify-center rounded-full border border-[#D5F5EA] bg-white">
 
                                             {/* Inner circle */}
-                                            <div className="flex h-[58px] w-[58px] items-center justify-center rounded-full bg-[#E8FFF7] transition-transform duration-300 group-hover:scale-105">
+                                            <div className="flex h-14.5 w-14.5 items-center justify-center rounded-full bg-[#E8FFF7] transition-transform duration-300 group-hover:scale-105">
                                                 <Icon
                                                     className="h-7 w-7 text-[#007A55]"
                                                     strokeWidth={1.8}
@@ -125,7 +107,7 @@ const HowItWorks = () => {
                                     {/* ================= CONTENT ================= */}
                                     <div className="relative z-10 mt-8">
 
-                                        <h3 className="min-h-[30px] text-xl font-bold tracking-tight text-gray-900">
+                                        <h3 className="min-h-7.5 text-xl font-bold tracking-tight text-gray-900">
                                             {step.title}
                                         </h3>
 

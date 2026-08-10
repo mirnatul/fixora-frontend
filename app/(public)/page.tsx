@@ -13,6 +13,7 @@ import SpecialOffer from "./_components/home/SpecialOffer";
 import Statistics from "./_components/home/Statistics";
 import Reviews from "./_components/home/Reviews";
 import TipsAndUpdates from "./_components/home/TipsAndUpdates";
+import ReadyToStart from "./_components/home/ReadyToStart";
 
 export default async function HomePage() {
   const topTechnicians = await getTopTechnicians();
@@ -23,7 +24,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <div className="max-w-screen mx-auto"><HeroSection user={user} /></div>
+      <div className="mx-auto"><HeroSection user={user} /></div>
       <div><FeatureTop></FeatureTop></div>
       <div><TopCategories></TopCategories></div>
       <div><HowItWorks></HowItWorks></div>
@@ -34,6 +35,7 @@ export default async function HomePage() {
       <div><Statistics></Statistics></div>
       <div><Reviews></Reviews></div>
       <div><TipsAndUpdates></TipsAndUpdates></div>
+      <div><ReadyToStart></ReadyToStart></div>
       <Footer />
     </div>
   );

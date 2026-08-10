@@ -41,7 +41,7 @@ export default function HeroSection({ user }: any) {
 
             {/* Hero */}
             <section className="relative">
-                <div className="grid min-h-[78vh] lg:grid-cols-[60%_40%] overflow-visible">
+                <div className="grid min-h-[85vh] lg:grid-cols-[60%_40%] overflow-visible">
                     <div className="
                         min-h-[78vh]
                         flex

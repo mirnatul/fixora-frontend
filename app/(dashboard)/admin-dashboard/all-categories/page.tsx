@@ -1,5 +1,5 @@
 import { getCategories } from "../_actions/getCategories";
-import CategoriesGrid from "../_components/categories/categoryGrid";
+import CategoryGrid from "../_components/categories/CategoryGrid";
 import CreateCategoryDialog from "../_components/categories/CreateCategoryDialog";
 
 export default async function AllCategoryPage() {
@@ -26,7 +26,7 @@ export default async function AllCategoryPage() {
 
             {/* Categories */}
             <div className="mx-auto max-w-7xl px-4 py-12">
-                <CategoriesGrid categories={categories.data} />
+                <CategoryGrid categories={categories.data} />
             </div>
         </main>
     );

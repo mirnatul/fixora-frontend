@@ -130,11 +130,11 @@ const Reviews = () => {
                             slidesPerView: 3,
                         },
                     }}
-                    className="reviews-swiper !pb-12"
+                    className="reviews-swiper pb-12!"
                 >
                     {reviews.map((review, index) => (
                         <SwiperSlide key={index}>
-                            <div className="group flex h-full min-h-[245px] flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                            <div className="group flex h-full min-h-61.25 flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
 
                                 {/* User */}
                                 <div className="flex items-center gap-3">

@@ -187,7 +187,7 @@ export function Navbar({ user }: NavbarProps) {
                                         className="cursor-pointer rounded-full p-1 transition-colors hover:bg-muted focus:outline-none"
                                         aria-label="Open user menu"
                                     >
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-green-600">
                                             <User className="h-4 w-4 text-primary" />
                                         </div>
                                     </button>
@@ -254,15 +254,7 @@ export function Navbar({ user }: NavbarProps) {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
-                            // <Link href="/login">
-                            //     <Button
-                            //         className="login-cta relative overflow-hidden rounded-lg bg-white! hover:bg-white! text-[#007A55]! hover:text-[#007A55]! px-5 cursor-pointer hover:scale-105">
-                            //         <span className="snake-line" />
-                            //         <span className="relative z-10 font-semibold">
-                            //             Log in
-                            //         </span>
-                            //     </Button>
-                            // </Link>
+
                             <Link href="/login">
                                 <Button
                                     className="

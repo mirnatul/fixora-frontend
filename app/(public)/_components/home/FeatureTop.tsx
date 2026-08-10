@@ -45,7 +45,7 @@ const FeatureTop = () => {
                             <div
                                 key={feature.title}
                                 className={`
-                                    relative flex min-h-[245px] flex-col
+                                    relative flex min-h-61.25 flex-col
                                     justify-center
                                     px-10 py-14
                                     transition-all duration-300
@@ -76,7 +76,7 @@ const FeatureTop = () => {
                                     }
 
                                     /* Remove medium border-right from last column */
-                                    md:max-lg:[&:nth-child(2n)]:border-r-0
+                                    md:max-lg:nth-[2n]:border-r-0
 
                                     /* Remove large border-right from last item */
                                     lg:last:border-r-0
@@ -93,7 +93,7 @@ const FeatureTop = () => {
                                 </h3>
 
                                 {/* Description */}
-                                <p className="mt-3 max-w-[285px] text-[14px] leading-6 text-white/75">
+                                <p className="mt-3 max-w-71.25 text-[14px] leading-6 text-white/75">
                                     {feature.description}
                                 </p>
                             </div>

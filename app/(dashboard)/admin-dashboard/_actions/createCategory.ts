@@ -4,16 +4,20 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export const createCategory = async (
-    prevState: any,
     formData: FormData
 ) => {
+
     try {
         const cookieStore = await cookies();
-        const accessToken = cookieStore.get("accessToken")?.value;
 
+        const accessToken =
+            cookieStore.get("accessToken")?.value;
         const payload = {
             name: formData.get("name"),
             description: formData.get("description"),
+            imageUrl: formData.get("imageUrl"),
+            imagePublicId:
+                formData.get("imagePublicId"),
         };
 
         const res = await fetch(
@@ -22,33 +26,50 @@ export const createCategory = async (
                 method: "POST",
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
-                    "Content-Type": "application/json",
+                    "Content-Type":
+                        "application/json",
                 },
                 body: JSON.stringify(payload),
             }
         );
 
-        const result = await res.json();
+        const text = await res.text();
+        let result;
+
+        try {
+            result = JSON.parse(text);
+        } catch {
+            result = {
+                message: text,
+            };
+        }
 
         if (!res.ok) {
             return {
                 success: false,
-                message: result.message ?? "Failed to create category",
+                message:
+                    result.message ??
+                    "Failed to create category.",
             };
         }
 
-        revalidatePath("/admin-dashboard/all-categories");
+        revalidatePath(
+            "/admin-dashboard/all-categories"
+        );
 
         return {
             success: true,
-            message: result.message ?? "Category created successfully",
+            message:
+                result.message ??
+                "Category created successfully.",
         };
     } catch (error) {
-        console.error(error);
-
         return {
             success: false,
-            message: "Something went wrong.",
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong.",
         };
     }
 };

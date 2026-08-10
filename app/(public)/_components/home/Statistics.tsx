@@ -41,7 +41,7 @@ const Statistics = () => {
                             <div
                                 key={stat.label}
                                 className={`
-                                    relative flex min-h-[200px]
+                                    relative flex min-h-50
                                     flex-col items-center justify-center
                                     px-10 py-12 text-center
                                     transition-all duration-300
@@ -72,7 +72,7 @@ const Statistics = () => {
                                     }
 
                                     /* Remove medium border-right from last column */
-                                    md:max-lg:[&:nth-child(2n)]:border-r-0
+                                    md:max-lg:nth-[2n]:border-r-0
 
                                     /* Remove large border-right from last item */
                                     lg:last:border-r-0

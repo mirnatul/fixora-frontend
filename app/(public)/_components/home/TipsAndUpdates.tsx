@@ -79,7 +79,7 @@ const TipsAndUpdates = () => {
                             className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                         >
                             {/* Image */}
-                            <div className="relative aspect-[16/10] overflow-hidden">
+                            <div className="relative aspect-16/10 overflow-hidden">
                                 <Image
                                     src={article.image}
                                     alt={article.title}

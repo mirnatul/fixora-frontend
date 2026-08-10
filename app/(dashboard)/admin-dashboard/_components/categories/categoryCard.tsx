@@ -1,27 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { toast } from "sonner";
-
-import { updateCategory } from "../../_actions/updateCategory";
-
-import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import UpdateCategoryDialog from "./UpdateCategoryDialog";
 
 interface Category {
     id: string;
     name: string;
     description: string;
+    imageUrl: string | null;
+    imagePublicId: string | null;
     createdAt: string;
     updatedAt: string;
 }
@@ -30,125 +16,60 @@ interface CategoryCardProps {
     category: Category;
 }
 
-const initialState = {
-    success: false,
-    message: "",
-};
-
 export default function CategoryCard({
     category,
 }: CategoryCardProps) {
-    const [open, setOpen] = useState(false);
-
-    const updateCategoryAction = updateCategory.bind(
-        null,
-        category.id
-    );
-
-    const [state, action, pending] = useActionState(
-        updateCategoryAction,
-        initialState
-    );
-
-    useEffect(() => {
-        if (!state.message) return;
-
-        if (state.success) {
-            toast.success(
-                state.message || "Category updated successfully."
-            );
-
-            setOpen(false);
-        } else {
-            toast.error(
-                state.message || "Failed to update category."
-            );
-        }
-    }, [state]);
-
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <div className="overflow-hidden rounded-lg border border-border bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-card">
+        <div className="overflow-hidden rounded-lg border border-border bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-card">
 
-                <div className="border-b border-border p-5">
-                    <h3 className="text-xl font-semibold text-foreground">
-                        {category.name}
-                    </h3>
+            {/* ==================================================
+                CATEGORY IMAGE
+            =================================================== */}
 
-                    <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
-                        {category.description}
-                    </p>
-                </div>
-
-                <div className="flex items-center justify-between p-4">
-                    <span className="text-xs text-muted-foreground">
-                        Created{" "}
-                        {new Date(
-                            category.createdAt
-                        ).toLocaleDateString()}
-                    </span>
-
-                    <DialogTrigger asChild>
-                        <Button variant="outline">
-                            Update Category
-                        </Button>
-                    </DialogTrigger>
-                </div>
+            <div className="aspect-video w-full overflow-hidden bg-muted">
+                {category.imageUrl ? (
+                    <img
+                        src={category.imageUrl}
+                        alt={category.name}
+                        className="h-full w-full object-cover"
+                    />
+                ) : (
+                    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                        No image
+                    </div>
+                )}
             </div>
 
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>
-                        Update Category
-                    </DialogTitle>
+            {/* ==================================================
+                CATEGORY INFO
+            =================================================== */}
 
-                    <DialogDescription>
-                        Update the category name and description.
-                    </DialogDescription>
-                </DialogHeader>
+            <div className="border-b border-border p-5">
+                <h3 className="text-xl font-semibold text-foreground">
+                    {category.name}
+                </h3>
 
-                <form
-                    action={action}
-                    className="space-y-4"
-                >
-                    <div className="space-y-2">
-                        <Label htmlFor="name">
-                            Category Name
-                        </Label>
+                <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
+                    {category.description}
+                </p>
+            </div>
 
-                        <Input
-                            id="name"
-                            name="name"
-                            defaultValue={category.name}
-                            required
-                        />
-                    </div>
+            {/* ==================================================
+                CARD FOOTER
+            =================================================== */}
 
-                    <div className="space-y-2">
-                        <Label htmlFor="description">
-                            Description
-                        </Label>
+            <div className="flex items-center justify-between p-4">
+                <span className="text-xs text-muted-foreground">
+                    Created{" "}
+                    {new Date(
+                        category.createdAt
+                    ).toLocaleDateString()}
+                </span>
 
-                        <Textarea
-                            id="description"
-                            name="description"
-                            defaultValue={category.description}
-                            rows={4}
-                            required
-                        />
-                    </div>
-
-                    <Button
-                        type="submit"
-                        disabled={pending}
-                        className="w-full"
-                    >
-                        {pending
-                            ? "Updating..."
-                            : "Update Category"}
-                    </Button>
-                </form>
-            </DialogContent>
-        </Dialog>
+                <UpdateCategoryDialog
+                    category={category}
+                />
+            </div>
+        </div>
     );
 }
