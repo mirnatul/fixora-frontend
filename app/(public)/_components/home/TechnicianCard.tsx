@@ -16,7 +16,7 @@ interface TechnicianCardProps {
         user: {
             name: string;
             city: string;
-            profileImage: string | null;
+            imageUrl: string | null;
         };
     };
 }
@@ -30,7 +30,7 @@ export default function TechnicianCard({
                 <div className="flex flex-col items-center text-center">
 
                     <Image
-                        src={technician.user.profileImage || "/dummy.jpg"}
+                        src={technician.user.imageUrl || "/dummy.jpg"}
                         alt={technician.user.name}
                         width={64}
                         height={64}

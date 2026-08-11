@@ -19,7 +19,7 @@ interface ITechnician {
         email: string;
         phone: string;
         city: string;
-        profileImage: string | null;
+        imageUrl: string | null;
     };
 }
 
@@ -30,6 +30,10 @@ interface TopTechniciansProps {
 export default function TopTechnicians({
     topTechnicians,
 }: TopTechniciansProps) {
+
+    console.log("TopTechnicians PROP:", topTechnicians);
+    console.log("Is array:", Array.isArray(topTechnicians));
+
     return (
         <section className="container py-16 mx-auto px-2">
             <div className="mb-8 flex items-center justify-between">

@@ -22,6 +22,8 @@ export default async function HomePage() {
   const user = await getMe();
   const role = user?.data?.profile?.role ?? null;
 
+
+
   return (
     <div>
       <div className="mx-auto"><HeroSection user={user} /></div>

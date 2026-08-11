@@ -13,9 +13,9 @@ interface IService {
     title: string;
     description: string;
     price: number;
-    duration: number;
     location: string;
     rating: string;
+    imageUrl: string;
 }
 
 interface ServiceCardProps {
@@ -49,10 +49,7 @@ export default function ServiceCard({
                 </p>
 
                 <div className="mb-6 space-y-3 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                        <Clock3 className="h-4 w-4" />
-                        <span>{service.duration} mins</span>
-                    </div>
+
 
                     <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4" />
