@@ -21,6 +21,7 @@ interface ImageUploadCropperProps {
     disabled?: boolean;
 }
 
+
 export default function ImageUploadCropper({
     imageType,
     existingImageUrl = null,
@@ -29,6 +30,13 @@ export default function ImageUploadCropper({
     onEditingChange,
     disabled = false,
 }: ImageUploadCropperProps) {
+
+    const shapeClass = {
+        rectangle: "aspect-video w-full rounded-lg",
+        square: "aspect-square w-48 rounded-lg",
+        circle: "h-48 w-48 rounded-full",
+        verticalRectangle: "aspect-[3/4] w-full rounded-lg",
+    }[imageType];
     // ============================================================
     // IMAGE STATE
     // ============================================================
@@ -363,22 +371,15 @@ export default function ImageUploadCropper({
                             image={imagePreview}
                             crop={crop}
                             zoom={zoom}
-                            aspect={
-                                IMAGE_CONFIG[
-                                    imageType
-                                ].aspectRatio
-                            }
-                            onCropChange={
-                                setCrop
-                            }
-                            onZoomChange={
-                                setZoom
-                            }
-                            onCropComplete={
-                                onCropComplete
-                            }
+                            aspect={IMAGE_CONFIG[imageType].aspectRatio}
+                            cropShape={imageType === "circle" ? "round" : "rect"}
+                            onCropChange={setCrop}
+                            onZoomChange={setZoom}
+                            onCropComplete={onCropComplete}
                         />
                     </div>
+
+
 
                     {/* Zoom */}
 
@@ -460,7 +461,7 @@ export default function ImageUploadCropper({
                 =================================================== */
 
                 <>
-                    <label
+                    {/* <label
                         htmlFor="image"
                         className="group flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/20 px-6 py-8 text-center transition-all hover:border-[#007A55]/50 hover:bg-[#007A55]/5"
                     >
@@ -498,6 +499,67 @@ export default function ImageUploadCropper({
 
                                         <polyline points="17 8 12 3 7 8" />
 
+                                        <line
+                                            x1="12"
+                                            x2="12"
+                                            y1="3"
+                                            y2="15"
+                                        />
+                                    </svg>
+                                </div>
+
+                                <p className="text-sm font-semibold text-foreground">
+                                    Click to upload an image
+                                </p>
+
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                    PNG, JPG or WEBP up to 5MB
+                                </p>
+                            </>
+                        )}
+                    </label> */}
+                    <label
+                        htmlFor="image"
+                        className={`group mx-auto flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-muted-foreground/25 bg-muted/20 px-6 py-8 text-center transition-all hover:border-[#007A55]/50 hover:bg-[#007A55]/5 ${shapeClass}`}
+                    >
+                        {imagePreview ? (
+                            <div className={`relative h-full w-full ${imageType === "circle" ? "rounded-full" : "rounded-lg"}`}>
+                                <img
+                                    src={imagePreview}
+                                    alt="preview"
+                                    className={`h-full w-full object-cover ${imageType === "circle"
+                                        ? "rounded-full"
+                                        : "rounded-lg"
+                                        }`}
+                                />
+
+                                <div
+                                    className={`pointer-events-none absolute inset-0 flex items-center justify-center ${imageType === "circle"
+                                        ? "rounded-full"
+                                        : "rounded-lg"
+                                        } bg-black/0 transition-all group-hover:bg-black/30`}
+                                >
+                                    <span className="rounded-md bg-white/90 px-3 py-1.5 text-sm font-medium text-gray-800 opacity-0 shadow transition-all group-hover:opacity-100">
+                                        Change Image
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#007A55]/10 text-[#007A55] transition-transform group-hover:scale-110">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="17 8 12 3 7 8" />
                                         <line
                                             x1="12"
                                             x2="12"

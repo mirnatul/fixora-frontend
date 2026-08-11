@@ -1,11 +1,15 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import {
+    useRef,
+    useState,
+} from "react";
+
 import { toast } from "sonner";
 
-import { createService } from "../../_actions/createService";
 
 import { Button } from "@/components/ui/button";
+
 import {
     Dialog,
     DialogContent,
@@ -14,14 +18,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const initialState = {
-    success: false,
-    message: "",
-};
+import { uploadToCloudinary } from "@/lib/cloudinary";
+
+import { Label } from "@/components/ui/label";
+
+import ImageUploadCropper from "@/components/shared/image/ImageUploadCropper";
+import { createService } from "../../_actions/createService";
 
 interface Category {
     id: string;
@@ -37,39 +43,179 @@ export default function CreateServiceDialog({
     userId,
     categories,
 }: Props) {
+    const imageType = "rectangle";
+
+    // ============================================================
+    // DIALOG STATE
+    // ============================================================
+
     const [open, setOpen] = useState(false);
 
-    const formRef = useRef<HTMLFormElement>(null);
+    // ============================================================
+    // IMAGE EDITING STATE
+    // ============================================================
 
-    const [state, formAction, pending] = useActionState(
-        createService,
-        initialState
-    );
+    const [editingImage, setEditingImage] =
+        useState(false);
 
-    useEffect(() => {
-        if (!state.message) return;
+    // ============================================================
+    // PROCESSED IMAGE
+    // ============================================================
 
-        if (state.success) {
-            toast.success(state.message);
+    const [processedImage, setProcessedImage] =
+        useState<File | null>(null);
+
+    // ============================================================
+    // SUBMIT STATE
+    // ============================================================
+
+    const [isSubmitting, setIsSubmitting] =
+        useState(false);
+
+    // ============================================================
+    // FORM REF
+    // ============================================================
+
+    const formRef =
+        useRef<HTMLFormElement>(null);
+
+    // ============================================================
+    // CREATE SERVICE
+    // ============================================================
+
+    const handleCreateService = async (
+        event: React.FormEvent<HTMLFormElement>
+    ) => {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+
+        // --------------------------------------------------------
+        // Make sure image exists
+        // --------------------------------------------------------
+
+        if (!processedImage) {
+            toast.error(
+                "Please select and process a service image."
+            );
+
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+
+            // ----------------------------------------------------
+            // 1. Upload processed image
+            // ----------------------------------------------------
+
+            const result =
+                await uploadToCloudinary(
+                    processedImage,
+                    process.env
+                        .NEXT_PUBLIC_API_URL!
+                );
+
+            // ----------------------------------------------------
+            // 2. Create FormData
+            // ----------------------------------------------------
+
+            const formData =
+                new FormData(form);
+
+            // Remove browser file
+            formData.delete("image");
+
+            // Add Cloudinary URL
+            formData.set(
+                "imageUrl",
+                result.url
+            );
+
+            // Add Cloudinary public ID
+            formData.set(
+                "imagePublicId",
+                result.publicId
+            );
+
+            // ----------------------------------------------------
+            // 3. Add technician ID
+            // ----------------------------------------------------
+
+            formData.set(
+                "technicianId",
+                userId
+            );
+
+            // ----------------------------------------------------
+            // 4. Create service
+            // ----------------------------------------------------
+
+            const response =
+                await createService(
+                    formData
+                );
+
+            // ----------------------------------------------------
+            // 5. Handle response
+            // ----------------------------------------------------
+
+            if (!response.success) {
+                toast.error(
+                    response.message
+                );
+
+                return;
+            }
+
+            toast.success(
+                response.message
+            );
+
+            // ----------------------------------------------------
+            // 6. Reset
+            // ----------------------------------------------------
 
             formRef.current?.reset();
+
+            setProcessedImage(null);
+
+            setEditingImage(false);
+
             setOpen(false);
-        } else {
-            toast.error(state.message);
+        } catch (error) {
+            console.error(error);
+
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to create service."
+            );
+        } finally {
+            setIsSubmitting(false);
         }
-    }, [state]);
+    };
+
+    // ============================================================
+    // UI
+    // ============================================================
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog
+            open={open}
+            onOpenChange={setOpen}
+        >
             <DialogTrigger asChild>
                 <Button variant="outline">
                     + Create New Service
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Create Service</DialogTitle>
+                    <DialogTitle>
+                        Create Service
+                    </DialogTitle>
 
                     <DialogDescription>
                         Add a new service to your profile.
@@ -78,125 +224,171 @@ export default function CreateServiceDialog({
 
                 <form
                     ref={formRef}
-                    action={formAction}
+                    onSubmit={
+                        handleCreateService
+                    }
                     className="space-y-4"
                 >
-                    <input
-                        type="hidden"
-                        name="technicianId"
-                        value={userId}
+                    {/* ==================================================
+                        IMAGE
+                    =================================================== */}
+
+                    <ImageUploadCropper
+                        imageType={imageType}
+                        onImageProcessed={
+                            setProcessedImage
+                        }
+                        onEditingChange={
+                            setEditingImage
+                        }
+                        onImageRemoved={() => {
+                            setProcessedImage(
+                                null
+                            );
+                        }}
+                        disabled={
+                            isSubmitting
+                        }
                     />
 
-                    <div>
-                        <Label htmlFor="title">
-                            Title
-                        </Label>
+                    {!editingImage && (
+                        <>
+                            {/* ==================================================
+                                SERVICE TITLE
+                            =================================================== */}
 
-                        <Input
-                            id="title"
-                            name="title"
-                            placeholder="e.g. Pipe Leak Repair"
-                            required
-                        />
-                    </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="title">
+                                    Service Title
+                                </Label>
 
-                    <div>
-                        <Label htmlFor="description">
-                            Description
-                        </Label>
+                                <Input
+                                    id="title"
+                                    name="title"
+                                    placeholder="e.g. Pipe Leak Repair"
+                                    required
+                                    className="rounded-sm"
+                                />
+                            </div>
 
-                        <Textarea
-                            id="description"
-                            name="description"
-                            placeholder="Describe your service..."
-                            required
-                        />
-                    </div>
+                            {/* ==================================================
+                                DESCRIPTION
+                            =================================================== */}
 
-                    <div>
-                        <Label htmlFor="categoryId">
-                            Category
-                        </Label>
+                            <div className="space-y-2">
+                                <Label htmlFor="description">
+                                    Description
+                                </Label>
 
-                        <select
-                            id="categoryId"
-                            name="categoryId"
-                            defaultValue=""
-                            required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                        >
-                            <option
-                                value=""
-                                disabled
-                            >
-                                Select Category
-                            </option>
+                                <Textarea
+                                    id="description"
+                                    name="description"
+                                    placeholder="Describe your service..."
+                                    rows={4}
+                                    required
+                                    className="rounded-sm"
+                                />
+                            </div>
 
-                            {categories.map((category) => (
-                                <option
-                                    key={category.id}
-                                    value={category.id}
+                            {/* ==================================================
+                                CATEGORY
+                            =================================================== */}
+
+                            <div className="space-y-2">
+                                <Label htmlFor="categoryId">
+                                    Category
+                                </Label>
+
+                                <select
+                                    id="categoryId"
+                                    name="categoryId"
+                                    defaultValue=""
+                                    required
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                                 >
-                                    {category.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                                    <option
+                                        value=""
+                                        disabled
+                                    >
+                                        Select Category
+                                    </option>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <Label htmlFor="price">
-                                Price (৳)
-                            </Label>
+                                    {categories.map(
+                                        (
+                                            category
+                                        ) => (
+                                            <option
+                                                key={
+                                                    category.id
+                                                }
+                                                value={
+                                                    category.id
+                                                }
+                                            >
+                                                {
+                                                    category.name
+                                                }
+                                            </option>
+                                        )
+                                    )}
+                                </select>
+                            </div>
 
-                            <Input
-                                id="price"
-                                name="price"
-                                type="number"
-                                min={0}
-                                placeholder="e.g. 1500"
-                                required
-                            />
-                        </div>
+                            {/* ==================================================
+                                PRICE
+                            =================================================== */}
 
-                        <div>
-                            <Label htmlFor="duration">
-                                Duration (Minutes)
-                            </Label>
+                            <div className="space-y-2">
+                                <Label htmlFor="price">
+                                    Price (৳)
+                                </Label>
 
-                            <Input
-                                id="duration"
-                                name="duration"
-                                type="number"
-                                min={1}
-                                placeholder="e.g. 90"
-                                required
-                            />
-                        </div>
-                    </div>
+                                <Input
+                                    id="price"
+                                    name="price"
+                                    type="number"
+                                    min={0}
+                                    placeholder="e.g. 1500"
+                                    required
+                                    className="rounded-sm"
+                                />
+                            </div>
 
-                    <div>
-                        <Label htmlFor="location">
-                            Location
-                        </Label>
+                            {/* ==================================================
+                                LOCATION
+                            =================================================== */}
 
-                        <Input
-                            id="location"
-                            name="location"
-                            placeholder="e.g. Dhaka"
-                            required
-                        />
-                    </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="location">
+                                    Location
+                                </Label>
 
-                    <Button
-                        type="submit"
-                        disabled={pending}
-                        className="w-full"
-                    >
-                        {pending
-                            ? "Creating..."
-                            : "Create Service"}
-                    </Button>
+                                <Input
+                                    id="location"
+                                    name="location"
+                                    placeholder="e.g. Dhaka"
+                                    required
+                                    className="rounded-sm"
+                                />
+                            </div>
+
+                            {/* ==================================================
+                                SUBMIT
+                            =================================================== */}
+
+                            <Button
+                                type="submit"
+                                disabled={
+                                    isSubmitting
+                                }
+                                className="w-full"
+                            >
+                                {isSubmitting
+                                    ? "Creating service..."
+                                    : "Create Service"}
+                            </Button>
+                        </>
+                    )}
                 </form>
             </DialogContent>
         </Dialog>
