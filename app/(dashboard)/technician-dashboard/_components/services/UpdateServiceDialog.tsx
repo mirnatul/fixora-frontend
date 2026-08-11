@@ -254,7 +254,7 @@ export default function UpdateServiceDialog({
                 UPDATE DIALOG
             =================================================== */}
 
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-lg rounded-sm">
                 <DialogHeader>
                     <DialogTitle>
                         Update Service

@@ -131,9 +131,9 @@ export function BookingForm({ service }: BookingFormProps) {
 
 
     return (
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="w-full">
 
-            <Card className="lg:col-span-2">
+            <Card className="w-full">
 
                 <CardHeader>
                     <CardTitle>
