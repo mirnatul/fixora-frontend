@@ -10,6 +10,7 @@ const manropeHeading = Manrope({ subsets: ['latin'], variable: '--font-heading' 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 import type { Metadata } from "next";
+import GoogleAuthProvider from "@/providers/googleAuthProvider";
 
 export const metadata: Metadata = {
   title: "Fixora",
@@ -28,7 +29,10 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Toaster position="top-center" richColors />
+        <GoogleAuthProvider>
         {children}
+        </GoogleAuthProvider>
+        
         {/* footer */}
       </body>
     </html>
