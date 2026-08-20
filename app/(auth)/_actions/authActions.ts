@@ -88,8 +88,7 @@ export const loginAction = async (prevState: LoginState, formData: FormData) => 
     const password = formData.get("password");
     const payload = { email, password }
 
-    const res = await fetch(`http://localhost:5000/api/auth/login`, {
-        // const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
+        const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
