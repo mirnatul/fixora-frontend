@@ -28,10 +28,10 @@ export default async function HomePage() {
     <div>
       <div className="mx-auto"><HeroSection user={user} /></div>
       <div><FeatureTop></FeatureTop></div>
+      <div><HowItWorks></HowItWorks></div>
       <div><TopCategories></TopCategories></div>
       <div><TopServices topServices={topServices.data} role={role} /></div>
       <div><TopTechnicians topTechnicians={topTechnicians.data} /></div>
-      <div><HowItWorks></HowItWorks></div>
       <div><WhyChooseUs></WhyChooseUs></div>
       <div><SpecialOffer></SpecialOffer></div>
       <div><Statistics></Statistics></div>
