@@ -16,298 +16,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-export const serviceCategories = [
-	{
-		name: "Cleaning",
-		services: [
-			"House Cleaning",
-			"Deep Cleaning",
-			"Kitchen Cleaning",
-			"Bathroom Cleaning",
-			"Sofa Cleaning",
-			"Carpet Cleaning",
-		],
-	},
-	{
-		name: "Plumbing",
-		services: [
-			"Pipe Repair",
-			"Faucet Repair",
-			"Water Tank Repair",
-			"Drain Cleaning",
-			"Toilet Repair",
-			"Leak Repair",
-		],
-	},
-	{
-		name: "Electrical",
-		services: [
-			"Electrical Repair",
-			"Switch & Socket Repair",
-			"Fan Installation",
-			"Light Installation",
-			"Wiring",
-			"Circuit Breaker Repair",
-		],
-	},
-	{
-		name: "AC & Cooling",
-		services: [
-			"AC Servicing",
-			"AC Repair",
-			"AC Installation",
-			"AC Gas Refill",
-			"AC Cleaning",
-		],
-	},
-	{
-		name: "Appliance Repair",
-		services: [
-			"Refrigerator Repair",
-			"Washing Machine Repair",
-			"Microwave Repair",
-			"Oven Repair",
-			"TV Repair",
-		],
-	},
-	{
-		name: "Painting",
-		services: [
-			"Interior Painting",
-			"Exterior Painting",
-			"Wall Painting",
-			"Ceiling Painting",
-			"Touch-up Painting",
-		],
-	},
-	{
-		name: "Carpentry",
-		services: [
-			"Furniture Repair",
-			"Door Repair",
-			"Cabinet Repair",
-			"Furniture Assembly",
-			"Custom Furniture",
-		],
-	},
-	{
-		name: "Moving",
-		services: [
-			"Home Moving",
-			"Office Moving",
-			"Furniture Moving",
-			"Packing & Unpacking",
-			"Loading & Unloading",
-		],
-	},
-	{
-		name: "Pest Control",
-		services: [
-			"Cockroach Control",
-			"Mosquito Control",
-			"Ant Control",
-			"Termite Control",
-			"Bed Bug Control",
-		],
-	},
-	{
-		name: "Home Security",
-		services: [
-			"CCTV Installation",
-			"CCTV Repair",
-			"Smart Lock Installation",
-			"Door Lock Repair",
-			"Security System Setup",
-		],
-	},
-	{
-		name: "Gardening",
-		services: [
-			"Garden Maintenance",
-			"Plant Care",
-			"Lawn Care",
-			"Tree Trimming",
-			"Plant Installation",
-		],
-	},
-	{
-		name: "Handyman",
-		services: [
-			"Furniture Assembly",
-			"Wall Mounting",
-			"Curtain Installation",
-			"Shelf Installation",
-			"Minor Repairs",
-		],
-	},
-	{
-		name: "Glass & Aluminum",
-		services: [
-			"Glass Repair",
-			"Glass Installation",
-			"Window Repair",
-			"Aluminum Work",
-			"Sliding Door Repair",
-		],
-	},
-	{
-		name: "Roof & Waterproofing",
-		services: [
-			"Roof Repair",
-			"Waterproofing",
-			"Leak Repair",
-			"Roof Cleaning",
-			"Damp Treatment",
-		],
-	},
-	{
-		name: "Laundry",
-		services: [
-			"Wash & Fold",
-			"Ironing",
-			"Dry Cleaning",
-			"Laundry Pickup",
-			"Laundry Delivery",
-		],
-	},
-	{
-		name: "Interior & Decor",
-		services: [
-			"Interior Design",
-			"Wall Decor",
-			"Curtain Installation",
-			"Lighting Design",
-			"Home Decoration",
-		],
-	},
-	{
-		name: "Bathroom Services",
-		services: [
-			"Bathroom Repair",
-			"Tile Repair",
-			"Grouting",
-			"Shower Installation",
-			"Bathroom Renovation",
-		],
-	},
-	{
-		name: "Kitchen Services",
-		services: [
-			"Kitchen Repair",
-			"Kitchen Cabinet Repair",
-			"Sink Installation",
-			"Kitchen Renovation",
-			"Countertop Installation",
-		],
-	},
-] as const;
-
-export const dhakaAreas = [
-	// Gulshan / Banani / Badda
-	"Gulshan 1",
-	"Gulshan 2",
-	"Banani",
-	"Mohakhali",
-	"Niketan",
-	"Badda",
-	"Uttar Badda",
-	"Middle Badda",
-	"Merul Badda",
-	"Shahjadpur",
-	"Natun Bazar",
-	"Aftabnagar",
-
-	// Uttara / Airport
-	"Uttara",
-	"Uttara Sector 3",
-	"Uttara Sector 4",
-	"Uttara Sector 7",
-	"Uttara Sector 9",
-	"Uttara Sector 10",
-	"Uttara Sector 11",
-	"Uttara Sector 12",
-	"Uttara Sector 13",
-	"Uttara Sector 14",
-	"Dakshinkhan",
-	"Ashkona",
-	"Khilkhet",
-	"Kuril",
-	"Nikunja",
-	"Airport",
-
-	// Mirpur
-	"Mirpur 1",
-	"Mirpur 2",
-	"Mirpur 6",
-	"Mirpur 10",
-	"Mirpur 11",
-	"Mirpur 12",
-	"Mirpur 13",
-	"Mirpur 14",
-	"Pallabi",
-	"Rupnagar",
-	"Kazipara",
-	"Shewrapara",
-	"Tolarbag",
-
-	// Dhanmondi / Mohammadpur
-	"Dhanmondi",
-	"Jigatola",
-	"Kalabagan",
-	"Shankar",
-	"Mohammadpur",
-	"Adabor",
-	"Shyamoli",
-	"Kallyanpur",
-	"Lalmatia",
-
-	// Tejgaon / Farmgate
-	"Tejgaon",
-	"Tejgaon Industrial Area",
-	"Farmgate",
-	"Karwan Bazar",
-	"Nakhalpara",
-	"Moghbazar",
-	"Hatirjheel",
-
-	// Rampura / Khilgaon
-	"Rampura",
-	"East Rampura",
-	"Khilgaon",
-	"Taltola",
-	"Malibagh",
-	"Basabo",
-	"Banasree",
-
-	// Motijheel / Paltan
-	"Motijheel",
-	"Paltan",
-	"Purana Paltan",
-	"Kakrail",
-	"Fakirapool",
-	"Segunbagicha",
-	"Shantinagar",
-	"Dilkusha",
-
-	// Old Dhaka
-	"Old Dhaka",
-	"Wari",
-	"Sutrapur",
-	"Gendaria",
-	"Lalbagh",
-	"Chawkbazar",
-	"Bangshal",
-	"Islampur",
-	"Sadarghat",
-
-	// Baridhara / Bashundhara
-	"Baridhara",
-	"Baridhara DOHS",
-	"Bashundhara R/A",
-	"Joar Sahara",
-	"Vatara",
-] as const;
+// import { serviceCategories } from "@/constants/serviceCategories";
+import { dhakaAreas } from "@/constants/dhakaAreas";
 
 const trustItems = [
 	{
@@ -336,7 +46,23 @@ const trustItems = [
 	},
 ];
 
-export default function HeroSection({ user }: any) {
+interface Category {
+	id: string;
+	name: string;
+	description: string;
+	categoryServices: string;
+	imageUrl: string | null;
+	imagePublicId: string | null;
+	createdAt: string;
+	updatedAt: string;
+}
+
+interface HeroSectionProps {
+	user: any;
+	categories: Category[];
+}
+export default function HeroSection({ user, categories }: HeroSectionProps) {
+	console.log(categories);
 	const [scrolled, setScrolled] = useState(false);
 
 	const [selectedArea, setSelectedArea] = useState("");
@@ -344,9 +70,14 @@ export default function HeroSection({ user }: any) {
 	const [isLocationOpen, setIsLocationOpen] = useState(false);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-	const [hoveredCategory, setHoveredCategory] = useState<
-		(typeof serviceCategories)[number] | null
-	>(null);
+	const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
+
+	const hoveredServices = hoveredCategory
+		? hoveredCategory.categoryServices
+				.split(",")
+				.map((service) => service.trim())
+				.filter(Boolean)
+		: [];
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -361,9 +92,14 @@ export default function HeroSection({ user }: any) {
 	}, []);
 
 	const handleFindServices = () => {
+		const category = categories.find(
+			(category) => category.id === selectedCategory,
+		);
+
 		console.log({
 			area: selectedArea,
-			category: selectedCategory,
+			categoryId: selectedCategory,
+			categoryName: category?.name,
 		});
 	};
 
@@ -626,14 +362,18 @@ export default function HeroSection({ user }: any) {
 											onClick={() => {
 												setIsCategoryOpen((prev) => !prev);
 
-												if (!hoveredCategory) {
-													setHoveredCategory(serviceCategories[0]);
+												if (!hoveredCategory && categories.length > 0) {
+													setHoveredCategory(categories[0]);
 												}
 											}}
 											className="mt-1 flex w-full cursor-pointer items-center justify-between gap-2 bg-transparent text-left text-sm font-medium outline-none sm:text-base"
 										>
 											<span className="truncate">
-												{selectedCategory || "Select Category"}
+												{selectedCategory
+													? categories.find(
+															(category) => category.id === selectedCategory,
+														)?.name
+													: "Select Category"}
 											</span>
 
 											<ChevronDown
@@ -669,22 +409,22 @@ export default function HeroSection({ user }: any) {
 															</div>
 
 															<div className="space-y-1">
-																{serviceCategories.map((category) => {
+																{categories.map((category) => {
 																	const isActive =
-																		hoveredCategory?.name === category.name;
+																		hoveredCategory?.id === category.id;
 
 																	const isSelected =
-																		selectedCategory === category.name;
+																		selectedCategory === category.id;
 
 																	return (
 																		<button
-																			key={category.name}
+																			key={category.id}
 																			type="button"
 																			onMouseEnter={() =>
 																				setHoveredCategory(category)
 																			}
 																			onClick={() => {
-																				setSelectedCategory(category.name);
+																				setSelectedCategory(category.id);
 																				setIsCategoryOpen(false);
 																				setHoveredCategory(null);
 																			}}
@@ -707,7 +447,6 @@ export default function HeroSection({ user }: any) {
 																				</span>
 																			</span>
 
-																			{/* Arrow only on desktop */}
 																			<span
 																				className={`hidden md:inline ${
 																					isActive
@@ -741,14 +480,14 @@ export default function HeroSection({ user }: any) {
 																			</h3>
 
 																			<p className="text-xs text-gray-400">
-																				{hoveredCategory.services.length}{" "}
-																				services available
+																				{hoveredServices.length} services
+																				available
 																			</p>
 																		</div>
 																	</div>
 
 																	<div className="grid grid-cols-2 gap-3">
-																		{hoveredCategory.services.map((service) => (
+																		{hoveredServices.map((service) => (
 																			<div
 																				key={service}
 																				className="rounded-xl border border-gray-100 bg-gray-50 px-3 py-3 text-xs font-medium text-gray-600"

@@ -1,349 +1,304 @@
 "use client";
 
 import { useState } from "react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { updateCategory } from "../../_actions/updateCategory";
+
 import ImageUploadCropper from "@/components/shared/image/ImageUploadCropper";
 
 interface Category {
-    id: string;
-    name: string;
-    description: string;
-    imageUrl: string | null;
-    imagePublicId: string | null;
-    createdAt: string;
-    updatedAt: string;
+	id: string;
+	name: string;
+	description: string;
+	categoryServices: string;
+	imageUrl: string | null;
+	imagePublicId: string | null;
+	createdAt: string;
+	updatedAt: string;
 }
 
 interface UpdateCategoryDialogProps {
-    category: Category;
+	category: Category;
 }
 
 export default function UpdateCategoryDialog({
-    category,
+	category,
 }: UpdateCategoryDialogProps) {
-    // ============================================================
-    // DIALOG STATE
-    // ============================================================
+	// ============================================================
+	// DIALOG STATE
+	// ============================================================
 
-    const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(false);
 
-    // ============================================================
-    // IMAGE STATE
-    // ============================================================
+	// ============================================================
+	// IMAGE STATE
+	// ============================================================
 
-    // New cropped/processed image
-    const [processedImage, setProcessedImage] =
-        useState<File | null>(null);
+	const [processedImage, setProcessedImage] = useState<File | null>(null);
+	const [imageRemoved, setImageRemoved] = useState(false);
+	const [editingImage, setEditingImage] = useState(false);
 
-    // Whether user removed the existing image
-    const [imageRemoved, setImageRemoved] =
-        useState(false);
+	// ============================================================
+	// SUBMIT STATE
+	// ============================================================
 
-    // Whether the image cropper is currently open
-    const [editingImage, setEditingImage] =
-        useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // ============================================================
-    // SUBMIT STATE
-    // ============================================================
+	// ============================================================
+	// UPDATE CATEGORY
+	// ============================================================
 
-    const [isSubmitting, setIsSubmitting] =
-        useState(false);
+	const handleUpdateCategory = async (
+		event: React.FormEvent<HTMLFormElement>,
+	) => {
+		event.preventDefault();
 
-    // ============================================================
-    // UPDATE CATEGORY
-    // ============================================================
+		const form = event.currentTarget;
 
-    const handleUpdateCategory = async (
-        event: React.FormEvent<HTMLFormElement>
-    ) => {
-        event.preventDefault();
+		try {
+			setIsSubmitting(true);
 
-        const form = event.currentTarget;
+			const formData = new FormData(form);
 
-        try {
-            setIsSubmitting(true);
+			// ==================================================
+			// SERVICES
+			// ==================================================
 
-            // Create FormData from name + description
-            const formData = new FormData(form);
+			const servicesValue = formData.get("categoryServices") as string | null;
 
-            // ==================================================
-            // CASE 1:
-            // USER SELECTED A NEW IMAGE
-            // ==================================================
+			const services = servicesValue
+				? servicesValue
+						.split(",")
+						.map((service) => service.trim())
+						.filter(Boolean)
+				: [];
 
-            if (processedImage) {
-                const result =
-                    await uploadToCloudinary(
-                        processedImage,
-                        process.env.NEXT_PUBLIC_API_URL!
-                    );
+			if (services.length === 0) {
+				toast.error("Please add at least one service.");
+				return;
+			}
 
-                // New Cloudinary URL
-                formData.set(
-                    "imageUrl",
-                    result.url
-                );
+			// Store services as comma-separated string
+			formData.set("categoryServices", services.join(", "));
 
-                // New Cloudinary public ID
-                formData.set(
-                    "imagePublicId",
-                    result.publicId
-                );
+			// ==================================================
+			// CASE 1:
+			// USER SELECTED A NEW IMAGE
+			// ==================================================
 
-                // Existing image that should be deleted
-                formData.set(
-                    "oldImagePublicId",
-                    category.imagePublicId ?? ""
-                );
-            }
+			if (processedImage) {
+				const result = await uploadToCloudinary(
+					processedImage,
+					process.env.NEXT_PUBLIC_API_URL!,
+				);
 
-            // ==================================================
-            // CASE 2:
-            // USER REMOVED THE IMAGE
-            // ==================================================
+				formData.set("imageUrl", result.url);
+				formData.set("imagePublicId", result.publicId);
+				formData.set("oldImagePublicId", category.imagePublicId ?? "");
+			}
 
-            else if (imageRemoved) {
-                formData.set(
-                    "imageUrl",
-                    ""
-                );
+			// ==================================================
+			// CASE 2:
+			// USER REMOVED THE IMAGE
+			// ==================================================
+			else if (imageRemoved) {
+				formData.set("imageUrl", "");
+				formData.set("imagePublicId", "");
+				formData.set("oldImagePublicId", category.imagePublicId ?? "");
+			}
 
-                formData.set(
-                    "imagePublicId",
-                    ""
-                );
+			// ==================================================
+			// CASE 3:
+			// USER DID NOT TOUCH THE IMAGE
+			// ==================================================
+			else {
+				formData.set("imageUrl", category.imageUrl ?? "");
+				formData.set("imagePublicId", category.imagePublicId ?? "");
+			}
 
-                // Existing Cloudinary image
-                // that should be deleted
-                formData.set(
-                    "oldImagePublicId",
-                    category.imagePublicId ?? ""
-                );
-            }
+			// ==================================================
+			// DEBUG
+			// ==================================================
 
-            // ==================================================
-            // CASE 3:
-            // USER DID NOT TOUCH THE IMAGE
-            // ==================================================
+			console.log("Update category payload:", {
+				name: formData.get("name"),
+				description: formData.get("description"),
+				imageUrl: formData.get("imageUrl"),
+				imagePublicId: formData.get("imagePublicId"),
+				oldImagePublicId: formData.get("oldImagePublicId"),
+				categoryServices: formData.get("categoryServices"),
+			});
 
-            else {
-                // Keep existing image
-                formData.set(
-                    "imageUrl",
-                    category.imageUrl ?? ""
-                );
+			// ==================================================
+			// UPDATE DATABASE
+			// ==================================================
 
-                formData.set(
-                    "imagePublicId",
-                    category.imagePublicId ?? ""
-                );
-            }
+			const response = await updateCategory(category.id, formData);
 
-            // ==================================================
-            // UPDATE DATABASE
-            // ==================================================
+			// ==================================================
+			// HANDLE RESPONSE
+			// ==================================================
 
-            const response =
-                await updateCategory(
-                    category.id,
-                    formData
-                );
+			if (!response.success) {
+				toast.error(response.message || "Failed to update category.");
+				return;
+			}
 
-            // ==================================================
-            // HANDLE RESPONSE
-            // ==================================================
+			toast.success(response.message || "Category updated successfully.");
 
-            if (!response.success) {
-                toast.error(
-                    response.message ||
-                    "Failed to update category."
-                );
+			// ==================================================
+			// RESET
+			// ==================================================
 
-                return;
-            }
+			setProcessedImage(null);
+			setImageRemoved(false);
+			setEditingImage(false);
 
-            toast.success(
-                response.message ||
-                "Category updated successfully."
-            );
+			setOpen(false);
+		} catch (error) {
+			console.error("Update category error:", error);
 
-            // ==================================================
-            // RESET IMAGE STATE
-            // ==================================================
+			toast.error(
+				error instanceof Error ? error.message : "Failed to update category.",
+			);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
-            setProcessedImage(null);
-            setImageRemoved(false);
-            setEditingImage(false);
+	// ============================================================
+	// UI
+	// ============================================================
 
-            // Close dialog
-            setOpen(false);
-        } catch (error) {
-            console.error(
-                "Update category error:",
-                error
-            );
-
-            toast.error(
-                error instanceof Error
-                    ? error.message
-                    : "Failed to update category."
-            );
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    // ============================================================
-    // UI
-    // ============================================================
-
-    return (
-        <Dialog
-            open={open}
-            onOpenChange={setOpen}
-        >
-            {/* ==================================================
+	return (
+		<Dialog open={open} onOpenChange={setOpen}>
+			{/* ==================================================
                 UPDATE BUTTON
-            =================================================== */}
+            ================================================== */}
 
-            <DialogTrigger asChild>
-                <Button variant="outline">
-                    Update Category
-                </Button>
-            </DialogTrigger>
+			<DialogTrigger asChild>
+				<Button className="cursor-pointer hover:bg-green-50" variant="outline">
+					Update Category
+				</Button>
+			</DialogTrigger>
 
-            {/* ==================================================
+			{/* ==================================================
                 UPDATE DIALOG
-            =================================================== */}
+            ================================================== */}
 
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>
-                        Update Category
-                    </DialogTitle>
+			<DialogContent className="sm:max-w-md">
+				<DialogHeader>
+					<DialogTitle>Update Category</DialogTitle>
 
-                    <DialogDescription>
-                        Update the category image, name and
-                        description.
-                    </DialogDescription>
-                </DialogHeader>
+					<DialogDescription>
+						Update the category image, name, description and services.
+					</DialogDescription>
+				</DialogHeader>
 
-                <form
-                    onSubmit={
-                        handleUpdateCategory
-                    }
-                    className="space-y-4"
-                >
-                    {/* ==================================================
-                        IMAGE SECTION
-                    =================================================== */}
+				<form onSubmit={handleUpdateCategory} className="space-y-4">
+					{/* ==================================================
+                        IMAGE
+                    ================================================== */}
 
-                    <ImageUploadCropper
-                        imageType="rectangle"
-                        existingImageUrl={
-                            category.imageUrl
-                        }
-                        onImageProcessed={
-                            setProcessedImage
-                        }
-                        onEditingChange={
-                            setEditingImage
-                        }
-                        onImageRemoved={() => {
-                            setImageRemoved(true);
-                        }}
-                        disabled={
-                            isSubmitting
-                        }
-                    />
+					<ImageUploadCropper
+						imageType="rectangle"
+						existingImageUrl={category.imageUrl}
+						onImageProcessed={setProcessedImage}
+						onEditingChange={setEditingImage}
+						onImageRemoved={() => {
+							setImageRemoved(true);
+						}}
+						disabled={isSubmitting}
+					/>
 
-                    {/* ==================================================
-                        HIDE THESE WHILE IMAGE IS BEING EDITED
-                    =================================================== */}
-
-                    {!editingImage && (
-                        <>
-                            {/* ==================================================
+					{!editingImage && (
+						<>
+							{/* ==================================================
                                 CATEGORY NAME
-                            =================================================== */}
+                            ================================================== */}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="name">
-                                    Category Name
-                                </Label>
+							<div className="space-y-2">
+								<Label htmlFor="name">Category Name</Label>
 
-                                <Input
-                                    id="name"
-                                    name="name"
-                                    defaultValue={
-                                        category.name
-                                    }
-                                    placeholder="e.g. Plumbing"
-                                    required
-                                    className="rounded-sm"
-                                />
-                            </div>
+								<Input
+									id="name"
+									name="name"
+									defaultValue={category.name}
+									placeholder="e.g. Plumbing"
+									required
+									disabled={isSubmitting}
+									className="rounded-sm"
+								/>
+							</div>
 
-                            {/* ==================================================
+							{/* ==================================================
                                 DESCRIPTION
-                            =================================================== */}
+                            ================================================== */}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="description">
-                                    Description
-                                </Label>
+							<div className="space-y-2">
+								<Label htmlFor="description">Description</Label>
 
-                                <Textarea
-                                    id="description"
-                                    name="description"
-                                    defaultValue={
-                                        category.description
-                                    }
-                                    placeholder="Enter category description..."
-                                    rows={4}
-                                    required
-                                    className="rounded-sm"
-                                />
-                            </div>
+								<Textarea
+									id="description"
+									name="description"
+									defaultValue={category.description}
+									placeholder="Enter category description..."
+									rows={4}
+									required
+									disabled={isSubmitting}
+									className="resize-none rounded-sm"
+								/>
+							</div>
 
-                            {/* ==================================================
+							{/* ==================================================
+                                SERVICES
+                            ================================================== */}
+
+							<div className="space-y-2">
+								<Label htmlFor="categoryServices">Services</Label>
+
+								<Textarea
+									id="categoryServices"
+									name="categoryServices"
+									defaultValue={category.categoryServices}
+									placeholder="House Cleaning, Deep Cleaning, Kitchen Cleaning, Bathroom Cleaning, Sofa Cleaning"
+									required
+									disabled={isSubmitting}
+									className="min-h-24 resize-none rounded-sm"
+								/>
+
+								<p className="text-xs text-muted-foreground">
+									Separate each service with a comma.
+								</p>
+							</div>
+
+							{/* ==================================================
                                 UPDATE BUTTON
-                            =================================================== */}
+                            ================================================== */}
 
-                            <Button
-                                type="submit"
-                                disabled={
-                                    isSubmitting
-                                }
-                                className="w-full"
-                            >
-                                {isSubmitting
-                                    ? "Updating..."
-                                    : "Update Category"}
-                            </Button>
-                        </>
-                    )}
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
+							<Button type="submit" disabled={isSubmitting} className="w-full">
+								{isSubmitting ? "Updating..." : "Update Category"}
+							</Button>
+						</>
+					)}
+				</form>
+			</DialogContent>
+		</Dialog>
+	);
 }

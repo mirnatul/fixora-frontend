@@ -1,429 +1,811 @@
+// "use client";
+
+// import { useState } from "react";
+// import { toast } from "sonner";
+
+// import { Button } from "@/components/ui/button";
+
+// import {
+//     Dialog,
+//     DialogContent,
+//     DialogDescription,
+//     DialogHeader,
+//     DialogTitle,
+//     DialogTrigger,
+// } from "@/components/ui/dialog";
+
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+// import { Textarea } from "@/components/ui/textarea";
+
+// import { uploadToCloudinary } from "@/lib/cloudinary";
+// import { updateService } from "../../_actions/updateService";
+
+// import ImageUploadCropper from "@/components/shared/image/ImageUploadCropper";
+
+// interface Service {
+//     id: string;
+//     title: string;
+//     description: string;
+//     price: number;
+//     location: string;
+//     rating: string;
+//     active: boolean;
+//     technicianId: string;
+//     categoryId: string;
+//     imageUrl: string | null;
+//     imagePublicId: string | null;
+//     createdAt: string;
+//     updatedAt: string;
+// }
+
+// interface UpdateServiceDialogProps {
+//     service: Service;
+// }
+
+// export default function UpdateServiceDialog({
+//     service,
+// }: UpdateServiceDialogProps) {
+//     // ============================================================
+//     // DIALOG STATE
+//     // ============================================================
+
+//     const [open, setOpen] = useState(false);
+
+//     // ============================================================
+//     // IMAGE STATE
+//     // ============================================================
+
+//     // New cropped/processed image
+//     const [processedImage, setProcessedImage] =
+//         useState<File | null>(null);
+
+//     // Whether user removed existing image
+//     const [imageRemoved, setImageRemoved] =
+//         useState(false);
+
+//     // Whether cropper is currently being edited
+//     const [editingImage, setEditingImage] =
+//         useState(false);
+
+//     // ============================================================
+//     // FORM STATE
+//     // ============================================================
+
+//     const [isSubmitting, setIsSubmitting] =
+//         useState(false);
+
+//     const [active, setActive] =
+//         useState(service.active);
+
+//     // ============================================================
+//     // UPDATE SERVICE
+//     // ============================================================
+
+//     const handleUpdateService = async (
+//         event: React.FormEvent<HTMLFormElement>
+//     ) => {
+//         event.preventDefault();
+
+//         const form = event.currentTarget;
+
+//         try {
+//             setIsSubmitting(true);
+
+//             // Create FormData from form
+//             const formData = new FormData(form);
+
+//             // ==================================================
+//             // ACTIVE VALUE
+//             // ==================================================
+
+//             formData.set(
+//                 "active",
+//                 active ? "true" : "false"
+//             );
+
+//             // ==================================================
+//             // CASE 1:
+//             // USER SELECTED A NEW IMAGE
+//             // ==================================================
+
+//             if (processedImage) {
+//                 const result =
+//                     await uploadToCloudinary(
+//                         processedImage,
+//                         process.env.NEXT_PUBLIC_API_URL!
+//                     );
+
+//                 // New Cloudinary URL
+//                 formData.set(
+//                     "imageUrl",
+//                     result.url
+//                 );
+
+//                 // New Cloudinary public ID
+//                 formData.set(
+//                     "imagePublicId",
+//                     result.publicId
+//                 );
+
+//                 // Existing image that should be deleted
+//                 formData.set(
+//                     "oldImagePublicId",
+//                     service.imagePublicId ?? ""
+//                 );
+//             }
+
+//             // ==================================================
+//             // CASE 2:
+//             // USER REMOVED EXISTING IMAGE
+//             // ==================================================
+
+//             else if (imageRemoved) {
+//                 formData.set(
+//                     "imageUrl",
+//                     ""
+//                 );
+
+//                 formData.set(
+//                     "imagePublicId",
+//                     ""
+//                 );
+
+//                 // Existing Cloudinary image
+//                 // that should be deleted
+//                 formData.set(
+//                     "oldImagePublicId",
+//                     service.imagePublicId ?? ""
+//                 );
+//             }
+
+//             // ==================================================
+//             // CASE 3:
+//             // USER DID NOT TOUCH IMAGE
+//             // ==================================================
+
+//             else {
+//                 // Keep existing image
+//                 formData.set(
+//                     "imageUrl",
+//                     service.imageUrl ?? ""
+//                 );
+
+//                 formData.set(
+//                     "imagePublicId",
+//                     service.imagePublicId ?? ""
+//                 );
+//             }
+
+//             // ==================================================
+//             // UPDATE DATABASE
+//             // ==================================================
+
+//             const response =
+//                 await updateService(
+//                     service.id,
+//                     formData
+//                 );
+
+//             // ==================================================
+//             // HANDLE RESPONSE
+//             // ==================================================
+
+//             if (!response.success) {
+//                 toast.error(
+//                     response.message ||
+//                     "Failed to update service."
+//                 );
+
+//                 return;
+//             }
+
+//             toast.success(
+//                 response.message ||
+//                 "Service updated successfully."
+//             );
+
+//             // ==================================================
+//             // RESET IMAGE STATE
+//             // ==================================================
+
+//             setProcessedImage(null);
+//             setImageRemoved(false);
+//             setEditingImage(false);
+
+//             // Close dialog
+//             setOpen(false);
+//         } catch (error) {
+//             console.error(
+//                 "Update service error:",
+//                 error
+//             );
+
+//             toast.error(
+//                 error instanceof Error
+//                     ? error.message
+//                     : "Failed to update service."
+//             );
+//         } finally {
+//             setIsSubmitting(false);
+//         }
+//     };
+
+//     // ============================================================
+//     // UI
+//     // ============================================================
+
+//     return (
+//         <Dialog
+//             open={open}
+//             onOpenChange={setOpen}
+//         >
+//             {/* ==================================================
+//                 UPDATE BUTTON
+//             =================================================== */}
+
+//             <DialogTrigger asChild>
+//                 <Button variant="outline">
+//                     Update Service
+//                 </Button>
+//             </DialogTrigger>
+
+//             {/* ==================================================
+//                 UPDATE DIALOG
+//             =================================================== */}
+
+//             <DialogContent className="sm:max-w-lg rounded-sm">
+//                 <DialogHeader>
+//                     <DialogTitle>
+//                         Update Service
+//                     </DialogTitle>
+
+//                     <DialogDescription>
+//                         Update the service image, information
+//                         and availability.
+//                     </DialogDescription>
+//                 </DialogHeader>
+
+//                 <form
+//                     onSubmit={handleUpdateService}
+//                     className="space-y-4"
+//                 >
+//                     {/* ==================================================
+//                         IMAGE SECTION
+//                     =================================================== */}
+
+//                     <ImageUploadCropper
+//                         imageType="rectangle"
+//                         existingImageUrl={
+//                             service.imageUrl
+//                         }
+//                         onImageProcessed={
+//                             setProcessedImage
+//                         }
+//                         onEditingChange={
+//                             setEditingImage
+//                         }
+//                         onImageRemoved={() => {
+//                             setImageRemoved(true);
+//                         }}
+//                         disabled={isSubmitting}
+//                     />
+
+//                     {/* ==================================================
+//                         HIDE FORM WHILE EDITING IMAGE
+//                     =================================================== */}
+
+//                     {!editingImage && (
+//                         <>
+//                             {/* ==================================================
+//                                 TITLE
+//                             =================================================== */}
+
+//                             <div className="space-y-2">
+//                                 <Label htmlFor="title">
+//                                     Service Title
+//                                 </Label>
+
+//                                 <Input
+//                                     id="title"
+//                                     name="title"
+//                                     defaultValue={
+//                                         service.title
+//                                     }
+//                                     placeholder="e.g. Home Plumbing Repair"
+//                                     required
+//                                     className="rounded-sm"
+//                                 />
+//                             </div>
+
+//                             {/* ==================================================
+//                                 DESCRIPTION
+//                             =================================================== */}
+
+//                             <div className="space-y-2">
+//                                 <Label htmlFor="description">
+//                                     Description
+//                                 </Label>
+
+//                                 <Textarea
+//                                     id="description"
+//                                     name="description"
+//                                     defaultValue={
+//                                         service.description
+//                                     }
+//                                     placeholder="Enter service description..."
+//                                     rows={4}
+//                                     required
+//                                     className="rounded-sm"
+//                                 />
+//                             </div>
+
+//                             {/* ==================================================
+//                                 PRICE
+//                             =================================================== */}
+
+//                             <div className="space-y-2">
+//                                 <Label htmlFor="price">
+//                                     Price (৳)
+//                                 </Label>
+
+//                                 <Input
+//                                     id="price"
+//                                     name="price"
+//                                     type="number"
+//                                     min="0"
+//                                     defaultValue={
+//                                         service.price
+//                                     }
+//                                     required
+//                                     className="rounded-sm"
+//                                 />
+//                             </div>
+
+//                             {/* ==================================================
+//                                 LOCATION
+//                             =================================================== */}
+
+//                             <div className="space-y-2">
+//                                 <Label htmlFor="location">
+//                                     Location
+//                                 </Label>
+
+//                                 <Input
+//                                     id="location"
+//                                     name="location"
+//                                     defaultValue={
+//                                         service.location
+//                                     }
+//                                     placeholder="e.g. Dhaka"
+//                                     required
+//                                     className="rounded-sm"
+//                                 />
+//                             </div>
+
+//                             {/* ==================================================
+//                                 ACTIVE
+//                             =================================================== */}
+
+//                             <div className="flex items-center gap-3">
+//                                 <input
+//                                     id="active"
+//                                     name="active"
+//                                     type="checkbox"
+//                                     checked={active}
+//                                     onChange={(event) =>
+//                                         setActive(
+//                                             event.target
+//                                                 .checked
+//                                         )
+//                                     }
+//                                     className="h-4 w-4"
+//                                 />
+
+//                                 <Label htmlFor="active">
+//                                     Active Service
+//                                 </Label>
+//                             </div>
+
+//                             {/* ==================================================
+//                                 UPDATE BUTTON
+//                             =================================================== */}
+
+//                             <Button
+//                                 type="submit"
+//                                 disabled={isSubmitting}
+//                                 className="w-full"
+//                             >
+//                                 {isSubmitting
+//                                     ? "Updating..."
+//                                     : "Update Service"}
+//                             </Button>
+//                         </>
+//                     )}
+//                 </form>
+//             </DialogContent>
+//         </Dialog>
+//     );
+// }
+
 "use client";
 
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { updateService } from "../../_actions/updateService";
-
 import ImageUploadCropper from "@/components/shared/image/ImageUploadCropper";
+import { dhakaAreas } from "@/constants/dhakaAreas";
 
 interface Service {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    location: string;
-    rating: string;
-    active: boolean;
-    technicianId: string;
-    categoryId: string;
-    imageUrl: string | null;
-    imagePublicId: string | null;
-    createdAt: string;
-    updatedAt: string;
+	id: string;
+	title: string;
+	description: string;
+	price: number;
+	location: string;
+	rating: string;
+	active: boolean;
+	technicianId: string;
+	categoryId: string;
+	imageUrl: string | null;
+	imagePublicId: string | null;
+	createdAt: string;
+	updatedAt: string;
 }
 
 interface UpdateServiceDialogProps {
-    service: Service;
+	service: Service;
 }
 
 export default function UpdateServiceDialog({
-    service,
+	service,
 }: UpdateServiceDialogProps) {
-    // ============================================================
-    // DIALOG STATE
-    // ============================================================
+	// ============================================================
+	// DIALOG STATE
+	// ============================================================
 
-    const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(false);
 
-    // ============================================================
-    // IMAGE STATE
-    // ============================================================
+	// ============================================================
+	// IMAGE STATE
+	// ============================================================
 
-    // New cropped/processed image
-    const [processedImage, setProcessedImage] =
-        useState<File | null>(null);
+	const [processedImage, setProcessedImage] = useState<File | null>(null);
 
-    // Whether user removed existing image
-    const [imageRemoved, setImageRemoved] =
-        useState(false);
+	const [imageRemoved, setImageRemoved] = useState(false);
 
-    // Whether cropper is currently being edited
-    const [editingImage, setEditingImage] =
-        useState(false);
+	const [editingImage, setEditingImage] = useState(false);
 
-    // ============================================================
-    // FORM STATE
-    // ============================================================
+	// ============================================================
+	// SUBMIT STATE
+	// ============================================================
 
-    const [isSubmitting, setIsSubmitting] =
-        useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [active, setActive] =
-        useState(service.active);
+	// ============================================================
+	// ACTIVE STATE
+	// ============================================================
 
-    // ============================================================
-    // UPDATE SERVICE
-    // ============================================================
+	const [active, setActive] = useState(service.active);
 
-    const handleUpdateService = async (
-        event: React.FormEvent<HTMLFormElement>
-    ) => {
-        event.preventDefault();
+	// ============================================================
+	// UPDATE SERVICE
+	// ============================================================
 
-        const form = event.currentTarget;
+	const handleUpdateService = async (
+		event: React.FormEvent<HTMLFormElement>,
+	) => {
+		event.preventDefault();
 
-        try {
-            setIsSubmitting(true);
+		const form = event.currentTarget;
 
-            // Create FormData from form
-            const formData = new FormData(form);
+		try {
+			setIsSubmitting(true);
 
-            // ==================================================
-            // ACTIVE VALUE
-            // ==================================================
+			// ========================================================
+			// 1. Capture FormData BEFORE async upload
+			// ========================================================
 
-            formData.set(
-                "active",
-                active ? "true" : "false"
-            );
+			const formData = new FormData(form);
 
-            // ==================================================
-            // CASE 1:
-            // USER SELECTED A NEW IMAGE
-            // ==================================================
+			// ========================================================
+			// 2. Normalize form values
+			// ========================================================
 
-            if (processedImage) {
-                const result =
-                    await uploadToCloudinary(
-                        processedImage,
-                        process.env.NEXT_PUBLIC_API_URL!
-                    );
+			const title = formData.get("title")?.toString().trim() ?? "";
 
-                // New Cloudinary URL
-                formData.set(
-                    "imageUrl",
-                    result.url
-                );
+			const description = formData.get("description")?.toString().trim() ?? "";
 
-                // New Cloudinary public ID
-                formData.set(
-                    "imagePublicId",
-                    result.publicId
-                );
+			const price = formData.get("price")?.toString() ?? "0";
 
-                // Existing image that should be deleted
-                formData.set(
-                    "oldImagePublicId",
-                    service.imagePublicId ?? ""
-                );
-            }
+			const location = formData.get("location")?.toString().trim() ?? "";
 
-            // ==================================================
-            // CASE 2:
-            // USER REMOVED EXISTING IMAGE
-            // ==================================================
+			// ========================================================
+			// 3. Explicitly set values
+			// ========================================================
 
-            else if (imageRemoved) {
-                formData.set(
-                    "imageUrl",
-                    ""
-                );
+			formData.set("title", title);
+			formData.set("description", description);
+			formData.set("price", price);
+			formData.set("location", location);
 
-                formData.set(
-                    "imagePublicId",
-                    ""
-                );
+			formData.set("active", active ? "true" : "false");
 
-                // Existing Cloudinary image
-                // that should be deleted
-                formData.set(
-                    "oldImagePublicId",
-                    service.imagePublicId ?? ""
-                );
-            }
+			// ========================================================
+			// 4. IMAGE HANDLING
+			// ========================================================
 
-            // ==================================================
-            // CASE 3:
-            // USER DID NOT TOUCH IMAGE
-            // ==================================================
+			// --------------------------------------------------------
+			// CASE 1: New image selected
+			// --------------------------------------------------------
 
-            else {
-                // Keep existing image
-                formData.set(
-                    "imageUrl",
-                    service.imageUrl ?? ""
-                );
+			if (processedImage) {
+				const result = await uploadToCloudinary(
+					processedImage,
+					process.env.NEXT_PUBLIC_API_URL!,
+				);
 
-                formData.set(
-                    "imagePublicId",
-                    service.imagePublicId ?? ""
-                );
-            }
+				// Remove browser image if it exists
+				formData.delete("image");
 
-            // ==================================================
-            // UPDATE DATABASE
-            // ==================================================
+				// New Cloudinary image
+				formData.set("imageUrl", result.url);
+				formData.set("imagePublicId", result.publicId);
 
-            const response =
-                await updateService(
-                    service.id,
-                    formData
-                );
+				// Old image should be deleted from Cloudinary
+				formData.set("oldImagePublicId", service.imagePublicId ?? "");
+			}
 
-            // ==================================================
-            // HANDLE RESPONSE
-            // ==================================================
+			// --------------------------------------------------------
+			// CASE 2: Existing image removed
+			// --------------------------------------------------------
+			else if (imageRemoved) {
+				formData.delete("image");
 
-            if (!response.success) {
-                toast.error(
-                    response.message ||
-                    "Failed to update service."
-                );
+				formData.set("imageUrl", "");
+				formData.set("imagePublicId", "");
 
-                return;
-            }
+				// Tell backend to delete old Cloudinary image
+				formData.set("oldImagePublicId", service.imagePublicId ?? "");
+			}
 
-            toast.success(
-                response.message ||
-                "Service updated successfully."
-            );
+			// --------------------------------------------------------
+			// CASE 3: Image untouched
+			// --------------------------------------------------------
+			else {
+				formData.delete("image");
 
-            // ==================================================
-            // RESET IMAGE STATE
-            // ==================================================
+				formData.set("imageUrl", service.imageUrl ?? "");
 
-            setProcessedImage(null);
-            setImageRemoved(false);
-            setEditingImage(false);
+				formData.set("imagePublicId", service.imagePublicId ?? "");
+			}
 
-            // Close dialog
-            setOpen(false);
-        } catch (error) {
-            console.error(
-                "Update service error:",
-                error
-            );
+			// 6. Update service
+			// ========================================================
 
-            toast.error(
-                error instanceof Error
-                    ? error.message
-                    : "Failed to update service."
-            );
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+			const response = await updateService(service.id, formData);
 
-    // ============================================================
-    // UI
-    // ============================================================
+			// ========================================================
+			// 7. Handle response
+			// ========================================================
 
-    return (
-        <Dialog
-            open={open}
-            onOpenChange={setOpen}
-        >
-            {/* ==================================================
-                UPDATE BUTTON
+			if (!response.success) {
+				toast.error(response.message || "Failed to update service.");
+				return;
+			}
+
+			toast.success(response.message || "Service updated successfully.");
+
+			// ========================================================
+			// 8. Reset state
+			// ========================================================
+
+			setProcessedImage(null);
+			setImageRemoved(false);
+			setEditingImage(false);
+
+			setOpen(false);
+		} catch (error) {
+			console.error("Update service error:", error);
+
+			toast.error(
+				error instanceof Error ? error.message : "Failed to update service.",
+			);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	// ============================================================
+	// UI
+	// ============================================================
+
+	return (
+		<Dialog open={open} onOpenChange={setOpen}>
+			{/* ==================================================
+                TRIGGER
             =================================================== */}
 
-            <DialogTrigger asChild>
-                <Button variant="outline">
-                    Update Service
-                </Button>
-            </DialogTrigger>
+			<DialogTrigger asChild>
+				<Button variant="outline" className="bg-green-50 cursor-pointer">
+					Update Service
+				</Button>
+			</DialogTrigger>
 
-            {/* ==================================================
-                UPDATE DIALOG
+			{/* ==================================================
+                DIALOG
             =================================================== */}
 
-            <DialogContent className="sm:max-w-lg rounded-sm">
-                <DialogHeader>
-                    <DialogTitle>
-                        Update Service
-                    </DialogTitle>
+			<DialogContent className="max-h-[90vh] overflow-y-auto rounded-sm sm:max-w-lg">
+				<DialogHeader>
+					<DialogTitle>Update Service</DialogTitle>
 
-                    <DialogDescription>
-                        Update the service image, information
-                        and availability.
-                    </DialogDescription>
-                </DialogHeader>
+					<DialogDescription>
+						Update your service information, image, location and availability.
+					</DialogDescription>
+				</DialogHeader>
 
-                <form
-                    onSubmit={handleUpdateService}
-                    className="space-y-4"
-                >
-                    {/* ==================================================
-                        IMAGE SECTION
+				<form onSubmit={handleUpdateService} className="space-y-4">
+					{/* ==================================================
+                        IMAGE
                     =================================================== */}
 
-                    <ImageUploadCropper
-                        imageType="rectangle"
-                        existingImageUrl={
-                            service.imageUrl
-                        }
-                        onImageProcessed={
-                            setProcessedImage
-                        }
-                        onEditingChange={
-                            setEditingImage
-                        }
-                        onImageRemoved={() => {
-                            setImageRemoved(true);
-                        }}
-                        disabled={isSubmitting}
-                    />
+					<ImageUploadCropper
+						imageType="rectangle"
+						existingImageUrl={service.imageUrl}
+						onImageProcessed={(file) => {
+							setProcessedImage(file);
 
-                    {/* ==================================================
-                        HIDE FORM WHILE EDITING IMAGE
+							// If user selects a new image after
+							// removing the old one, treat it as
+							// a replacement instead.
+							setImageRemoved(false);
+						}}
+						onEditingChange={setEditingImage}
+						onImageRemoved={() => {
+							setProcessedImage(null);
+							setImageRemoved(true);
+						}}
+						disabled={isSubmitting}
+					/>
+
+					{/* ==================================================
+                        FORM CONTENT
                     =================================================== */}
 
-                    {!editingImage && (
-                        <>
-                            {/* ==================================================
+					{!editingImage && (
+						<>
+							{/* ==================================================
                                 TITLE
                             =================================================== */}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="title">
-                                    Service Title
-                                </Label>
+							<div className="space-y-2">
+								<Label htmlFor="title">Service Title</Label>
 
-                                <Input
-                                    id="title"
-                                    name="title"
-                                    defaultValue={
-                                        service.title
-                                    }
-                                    placeholder="e.g. Home Plumbing Repair"
-                                    required
-                                    className="rounded-sm"
-                                />
-                            </div>
+								<Input
+									id="title"
+									name="title"
+									defaultValue={service.title}
+									placeholder="e.g. Home Plumbing Repair"
+									required
+									disabled={isSubmitting}
+									className="rounded-sm"
+								/>
+							</div>
 
-                            {/* ==================================================
+							{/* ==================================================
                                 DESCRIPTION
                             =================================================== */}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="description">
-                                    Description
-                                </Label>
+							<div className="space-y-2">
+								<Label htmlFor="description">Description</Label>
 
-                                <Textarea
-                                    id="description"
-                                    name="description"
-                                    defaultValue={
-                                        service.description
-                                    }
-                                    placeholder="Enter service description..."
-                                    rows={4}
-                                    required
-                                    className="rounded-sm"
-                                />
-                            </div>
+								<Textarea
+									id="description"
+									name="description"
+									defaultValue={service.description}
+									placeholder="Describe your service..."
+									rows={4}
+									required
+									disabled={isSubmitting}
+									className="rounded-sm"
+								/>
+							</div>
 
-                            {/* ==================================================
+							{/* ==================================================
                                 PRICE
                             =================================================== */}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="price">
-                                    Price (৳)
-                                </Label>
+							<div className="space-y-2">
+								<Label htmlFor="price">Price (৳)</Label>
 
-                                <Input
-                                    id="price"
-                                    name="price"
-                                    type="number"
-                                    min="0"
-                                    defaultValue={
-                                        service.price
-                                    }
-                                    required
-                                    className="rounded-sm"
-                                />
-                            </div>
+								<Input
+									id="price"
+									name="price"
+									type="number"
+									min={0}
+									defaultValue={service.price}
+									placeholder="e.g. 1500"
+									required
+									disabled={isSubmitting}
+									className="rounded-sm"
+								/>
+							</div>
 
-                            {/* ==================================================
+							{/* ==================================================
                                 LOCATION
                             =================================================== */}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="location">
-                                    Location
-                                </Label>
+							<div className="space-y-2">
+								<Label htmlFor="location">Service Location</Label>
 
-                                <Input
-                                    id="location"
-                                    name="location"
-                                    defaultValue={
-                                        service.location
-                                    }
-                                    placeholder="e.g. Dhaka"
-                                    required
-                                    className="rounded-sm"
-                                />
-                            </div>
+								<select
+									id="location"
+									name="location"
+									defaultValue={service.location}
+									required
+									disabled={isSubmitting}
+									className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+								>
+									<option value="" disabled>
+										Select your service area
+									</option>
 
-                            {/* ==================================================
+									{dhakaAreas.map((area) => (
+										<option key={area} value={area}>
+											{area}
+										</option>
+									))}
+								</select>
+							</div>
+
+							{/* ==================================================
                                 ACTIVE
                             =================================================== */}
 
-                            <div className="flex items-center gap-3">
-                                <input
-                                    id="active"
-                                    name="active"
-                                    type="checkbox"
-                                    checked={active}
-                                    onChange={(event) =>
-                                        setActive(
-                                            event.target
-                                                .checked
-                                        )
-                                    }
-                                    className="h-4 w-4"
-                                />
+							<div className="flex items-center gap-3">
+								<input
+									id="active"
+									name="active"
+									type="checkbox"
+									checked={active}
+									onChange={(event) => setActive(event.target.checked)}
+									disabled={isSubmitting}
+									className="h-4 w-4"
+								/>
 
-                                <Label htmlFor="active">
-                                    Active Service
-                                </Label>
-                            </div>
+								<Label htmlFor="active">Active Service</Label>
+							</div>
 
-                            {/* ==================================================
+							{/* ==================================================
                                 UPDATE BUTTON
                             =================================================== */}
 
-                            <Button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="w-full"
-                            >
-                                {isSubmitting
-                                    ? "Updating..."
-                                    : "Update Service"}
-                            </Button>
-                        </>
-                    )}
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
+							<Button
+								type="submit"
+								disabled={isSubmitting}
+								className="w-full cursor-pointer"
+							>
+								{isSubmitting ? "Updating service..." : "Update Service"}
+							</Button>
+						</>
+					)}
+				</form>
+			</DialogContent>
+		</Dialog>
+	);
 }

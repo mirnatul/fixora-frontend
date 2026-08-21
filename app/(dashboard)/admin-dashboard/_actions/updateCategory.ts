@@ -4,98 +4,105 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export const updateCategory = async (
-    categoryId: string,
-    formData: FormData
+	categoryId: string,
+	formData: FormData,
 ) => {
-    try {
-        const cookieStore = await cookies();
+	try {
+		const cookieStore = await cookies();
+		const accessToken = cookieStore.get("accessToken")?.value;
 
-        const accessToken =
-            cookieStore.get("accessToken")?.value;
+		// ==========================================
+		// GET SERVICES
+		// ==========================================
 
-        // ==========================================
-        // CREATE PAYLOAD
-        // ==========================================
+		const servicesValue = formData.get("categoryServices") as string | null;
 
-        const payload = {
-            name: formData.get("name") as string,
+		const categoryServices = servicesValue
+			? servicesValue
+					.split(",")
+					.map((service) => service.trim())
+					.filter(Boolean)
+			: [];
 
-            description:
-                formData.get("description") as string,
+		// ==========================================
+		// CREATE PAYLOAD
+		// ==========================================
 
-            imageUrl:
-                formData.get("imageUrl") as string,
+		const payload = {
+			name: formData.get("name") as string,
+			description: formData.get("description") as string,
+			imageUrl: formData.get("imageUrl") as string,
+			imagePublicId: formData.get("imagePublicId") as string,
+			categoryServices,
+		};
 
-            imagePublicId:
-                formData.get("imagePublicId") as string,
-        };
+		// ==========================================
+		// DEBUG
+		// ==========================================
 
-        // ==========================================
-        // BACKEND PATCH REQUEST
-        // ==========================================
+		console.log("Update category payload:", payload);
 
-        const res = await fetch(
-            `${process.env.BACKEND_API_URL}/api/category/${categoryId}`,
-            {
-                method: "PATCH",
+		// ==========================================
+		// BACKEND PATCH REQUEST
+		// ==========================================
 
-                headers: {
-                    Cookie: `accessToken=${accessToken}`,
+		const res = await fetch(
+			`${process.env.BACKEND_API_URL}/api/category/${categoryId}`,
+			{
+				method: "PATCH",
+				headers: {
+					Cookie: `accessToken=${accessToken}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(payload),
+			},
+		);
 
-                    "Content-Type":
-                        "application/json",
-                },
+		// ==========================================
+		// PARSE RESPONSE
+		// ==========================================
 
-                body: JSON.stringify(payload),
-            }
-        );
+		const text = await res.text();
 
-        const text = await res.text();
+		let result: {
+			message?: string;
+		};
 
-        let result;
+		try {
+			result = JSON.parse(text);
+		} catch {
+			result = {
+				message: text,
+			};
+		}
 
-        try {
-            result = JSON.parse(text);
-        } catch {
-            result = {
-                message: text,
-            };
-        }
+		// ==========================================
+		// HANDLE ERROR
+		// ==========================================
 
-        if (!res.ok) {
-            return {
-                success: false,
+		if (!res.ok) {
+			return {
+				success: false,
+				message: result.message ?? "Failed to update category.",
+			};
+		}
 
-                message:
-                    result.message ??
-                    "Failed to update category.",
-            };
-        }
+		// ==========================================
+		// REVALIDATE
+		// ==========================================
 
-        revalidatePath(
-            "/admin-dashboard/all-categories"
-        );
+		revalidatePath("/admin-dashboard/all-categories");
 
-        return {
-            success: true,
+		return {
+			success: true,
+			message: result.message ?? "Category updated successfully.",
+		};
+	} catch (error) {
+		console.error("❌ Update category error:", error);
 
-            message:
-                result.message ??
-                "Category updated successfully.",
-        };
-    } catch (error) {
-        console.error(
-            "❌ Update category error:",
-            error
-        );
-
-        return {
-            success: false,
-
-            message:
-                error instanceof Error
-                    ? error.message
-                    : "Something went wrong.",
-        };
-    }
+		return {
+			success: false,
+			message: error instanceof Error ? error.message : "Something went wrong.",
+		};
+	}
 };

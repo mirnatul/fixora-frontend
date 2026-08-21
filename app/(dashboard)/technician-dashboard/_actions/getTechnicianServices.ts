@@ -1,22 +1,23 @@
-"use server"
+"use server";
 
 import { cookies } from "next/headers";
 
 export const getTechnicianServices = async (userId: string) => {
+	const cookieStore = await cookies();
+	const accessToken = cookieStore.get("accessToken")?.value;
 
+	const res = await fetch(
+		`${process.env.BACKEND_API_URL}/api/services/technician`,
+		{
+			headers: {
+				Cookie: `accessToken=${accessToken}`,
+				"Content-Type": "application/json",
+			},
+		},
+	);
 
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value;
+	const result = await res.json();
 
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/services/technician`, {
-        headers: {
-            Cookie: `accessToken=${accessToken}`,
-            "Content-Type": "application/json",
-        }
-    })
-
-    const result = await res.json();
-
-    // console.log(result);
-    return result;
-}
+	// console.log(result);
+	return result;
+};

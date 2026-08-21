@@ -32,121 +32,98 @@
 //     return result;
 // }
 
-
 "use server";
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-export const updateService = async (
-    serviceId: string,
-    formData: FormData
-) => {
-    try {
-        // ============================================================
-        // GET ACCESS TOKEN
-        // ============================================================
+export const updateService = async (serviceId: string, formData: FormData) => {
+	try {
+		// ============================================================
+		// GET ACCESS TOKEN
+		// ============================================================
 
-        const cookieStore = await cookies();
+		const cookieStore = await cookies();
 
-        const accessToken =
-            cookieStore.get("accessToken")?.value;
+		const accessToken = cookieStore.get("accessToken")?.value;
 
-        if (!accessToken) {
-            return {
-                success: false,
-                message: "Unauthorized. Please login again.",
-            };
-        }
+		if (!accessToken) {
+			return {
+				success: false,
+				message: "Unauthorized. Please login again.",
+			};
+		}
 
-        // ============================================================
-        // CREATE PAYLOAD
-        // ============================================================
+		// ============================================================
+		// CREATE PAYLOAD
+		// ============================================================
 
-        const payload = {
-            title: formData.get("title") as string,
-            description:
-                formData.get("description") as string,
+		const payload = {
+			title: formData.get("title") as string,
+			description: formData.get("description") as string,
+			price: Number(formData.get("price")),
+			location: formData.get("location") as string,
+			active: formData.get("active") === "true",
 
-            price: Number(
-                formData.get("price")
-            ),
+			// ========================================================
+			// IMAGE
+			// ========================================================
 
-            location:
-                formData.get("location") as string,
+			imageUrl: (formData.get("imageUrl") as string) || null,
+			imagePublicId: (formData.get("imagePublicId") as string) || null,
+		};
 
-            active:
-                formData.get("active") === "true",
+		// console.log(payload);
 
-            // ========================================================
-            // IMAGE
-            // ========================================================
+		// ============================================================
+		// UPDATE SERVICE
+		// ============================================================
 
-            imageUrl:
-                formData.get("imageUrl") as string || null,
+		const res = await fetch(
+			`${process.env.BACKEND_API_URL}/api/services/${serviceId}`,
+			{
+				method: "PATCH",
 
-            imagePublicId:
-                formData.get("imagePublicId") as string || null,
-        };
+				headers: {
+					Cookie: `accessToken=${accessToken}`,
+					"Content-Type": "application/json",
+				},
 
-        // console.log(payload);
+				body: JSON.stringify(payload),
+			},
+		);
 
-        // ============================================================
-        // UPDATE SERVICE
-        // ============================================================
+		const result = await res.json();
 
-        const res = await fetch(
-            `${process.env.BACKEND_API_URL}/api/services/${serviceId}`,
-            {
-                method: "PATCH",
+		// ============================================================
+		// HANDLE BACKEND ERROR
+		// ============================================================
 
-                headers: {
-                    Cookie: `accessToken=${accessToken}`,
-                    "Content-Type": "application/json",
-                },
+		if (!res.ok) {
+			return {
+				success: false,
+				message: result.message || "Failed to update service.",
+			};
+		}
 
-                body: JSON.stringify(payload),
-            }
-        );
+		// ============================================================
+		// REVALIDATE SERVICE PAGE
+		// ============================================================
 
-        const result = await res.json();
+		revalidatePath("/technician-dashboard/my-services");
 
-        // ============================================================
-        // HANDLE BACKEND ERROR
-        // ============================================================
+		console.log("Updated service:", result);
 
-        if (!res.ok) {
-            return {
-                success: false,
-                message:
-                    result.message ||
-                    "Failed to update service.",
-            };
-        }
+		return result;
+	} catch (error) {
+		console.error("Update service error:", error);
 
-        // ============================================================
-        // REVALIDATE SERVICE PAGE
-        // ============================================================
-
-        revalidatePath(
-            "/technician-dashboard/my-services"
-        );
-
-        console.log("Updated service:", result);
-
-        return result;
-    } catch (error) {
-        console.error(
-            "Update service error:",
-            error
-        );
-
-        return {
-            success: false,
-            message:
-                error instanceof Error
-                    ? error.message
-                    : "Something went wrong while updating the service.",
-        };
-    }
+		return {
+			success: false,
+			message:
+				error instanceof Error
+					? error.message
+					: "Something went wrong while updating the service.",
+		};
+	}
 };

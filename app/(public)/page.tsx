@@ -14,31 +14,56 @@ import Statistics from "./_components/home/Statistics";
 import Reviews from "./_components/home/Reviews";
 import TipsAndUpdates from "./_components/home/TipsAndUpdates";
 import ReadyToStart from "./_components/home/ReadyToStart";
+import { getCategories } from "./_actions/getCategories";
 
 export default async function HomePage() {
-  const topTechnicians = await getTopTechnicians();
-  const topServices = await getTopServices();
+	const topTechnicians = await getTopTechnicians();
+	const topServices = await getTopServices();
 
-  const user = await getMe();
-  const role = user?.data?.profile?.role ?? null;
+	const user = await getMe();
+	const role = user?.data?.profile?.role ?? null;
 
+	const categories = await getCategories();
 
-
-  return (
-    <div>
-      <div className="mx-auto"><HeroSection user={user} /></div>
-      <div><FeatureTop></FeatureTop></div>
-      <div><HowItWorks></HowItWorks></div>
-      <div><TopCategories></TopCategories></div>
-      <div><TopServices topServices={topServices.data} role={role} /></div>
-      <div><TopTechnicians topTechnicians={topTechnicians.data} /></div>
-      <div><WhyChooseUs></WhyChooseUs></div>
-      <div><SpecialOffer></SpecialOffer></div>
-      <div><Statistics></Statistics></div>
-      <div><Reviews></Reviews></div>
-      <div><TipsAndUpdates></TipsAndUpdates></div>
-      <div><ReadyToStart></ReadyToStart></div>
-      <Footer />
-    </div>
-  );
+	return (
+		<div>
+			<div className="mx-auto">
+				<HeroSection user={user} categories={categories.data} />
+			</div>
+			<div>
+				<FeatureTop></FeatureTop>
+			</div>
+			<div>
+				<HowItWorks></HowItWorks>
+			</div>
+			<div>
+				<TopCategories></TopCategories>
+			</div>
+			<div>
+				<TopServices topServices={topServices.data} role={role} />
+			</div>
+			<div>
+				<TopTechnicians topTechnicians={topTechnicians.data} />
+			</div>
+			<div>
+				<WhyChooseUs></WhyChooseUs>
+			</div>
+			<div>
+				<SpecialOffer></SpecialOffer>
+			</div>
+			<div>
+				<Statistics></Statistics>
+			</div>
+			<div>
+				<Reviews></Reviews>
+			</div>
+			<div>
+				<TipsAndUpdates></TipsAndUpdates>
+			</div>
+			<div>
+				<ReadyToStart></ReadyToStart>
+			</div>
+			<Footer />
+		</div>
+	);
 }
