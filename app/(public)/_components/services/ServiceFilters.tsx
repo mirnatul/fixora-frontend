@@ -343,7 +343,7 @@ export default function ServiceFilters({ categories }: ServiceFiltersProps) {
 					<DialogTrigger asChild>
 						<button
 							type="button"
-							className="shrink-0 rounded-lg border bg-primary text-white px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-muted"
+							className="shrink-0 rounded-lg border bg-primary text-white px-4 py-2 text-sm font-medium shadow-sm transition-colors cursor-pointer hover:bg-green-800"
 						>
 							Filters
 						</button>

@@ -1,6 +1,7 @@
 "use client";
 
-import UpdateCategoryDialog from "./UpdateCategoryDialog";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 interface Category {
 	id: string;
@@ -18,6 +19,7 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category }: CategoryCardProps) {
+	const router = useRouter();
 	const services = category.categoryServices
 		? category.categoryServices
 				.split(",")
@@ -188,55 +190,20 @@ export default function CategoryCard({ category }: CategoryCardProps) {
 					{/* ==================================================
                         FOOTER
                     ================================================== */}
-					<div className="mt-auto pt-6">
-						<div className="flex items-center justify-between border-t border-slate-100 pt-4 dark:border-border">
-							{/* Created date */}
-							<div className="flex items-center gap-2.5">
-								<div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#007A55]/8 text-[#007A55]">
-									{/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-									<svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
-										<rect
-											x="3"
-											y="4"
-											width="18"
-											height="17"
-											rx="3"
-											stroke="currentColor"
-											strokeWidth="1.7"
-										/>
-										<path
-											d="M16 2V6M8 2V6M3 10H21"
-											stroke="currentColor"
-											strokeWidth="1.7"
-											strokeLinecap="round"
-										/>
-									</svg>
-								</div>
+					{/* Actions */}
+					<Button
+						className="h-8 gap-2 py-6 cursor-pointer mt-4 capitalize rounded-lg bg-[#007A55] px-3 text-xs font-semibold text-white shadow-sm transition-all hover:bg-[#006B4A] hover:shadow-md"
+						onClick={() => {
+							const params = new URLSearchParams({
+								categoryId: category.id,
+								page: "1",
+							});
 
-								<div>
-									<p className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">
-										Created
-									</p>
-
-									<p className="text-[11px] font-medium text-slate-600 dark:text-muted-foreground">
-										{new Date(category.createdAt).toLocaleDateString(
-											undefined,
-											{
-												day: "numeric",
-												month: "short",
-												year: "numeric",
-											},
-										)}
-									</p>
-								</div>
-							</div>
-
-							{/* Update */}
-							<div className="rounded-xl border border-slate-200/80 bg-slate-50 p-1 transition-all duration-300 group-hover:border-[#007A55]/15 group-hover:bg-[#007A55]/5 dark:border-border dark:bg-muted">
-								<UpdateCategoryDialog category={category} />
-							</div>
-						</div>
-					</div>
+							router.push(`/services?${params.toString()}`);
+						}}
+					>
+						View {category.name} Services
+					</Button>
 				</div>
 
 				{/* Bottom accent */}

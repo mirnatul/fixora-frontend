@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import { serviceCategories } from "@/constants/serviceCategories";
 import { dhakaAreas } from "@/constants/dhakaAreas";
+import { useRouter } from "next/navigation";
 
 const trustItems = [
 	{
@@ -61,7 +62,9 @@ interface HeroSectionProps {
 	user: any;
 	categories: Category[];
 }
+
 export default function HeroSection({ user, categories }: HeroSectionProps) {
+	const router = useRouter();
 	// console.log(categories);
 	const [scrolled, setScrolled] = useState(false);
 
@@ -96,8 +99,16 @@ export default function HeroSection({ user, categories }: HeroSectionProps) {
 			(category) => category.id === selectedCategory,
 		);
 
+		const params = new URLSearchParams({
+			categoryId: selectedCategory,
+			location: selectedArea,
+			page: "1",
+		});
+
+		router.push(`/services?${params.toString()}`);
+
 		// console.log({
-		// 	area: selectedArea,
+		// 	location: selectedArea,
 		// 	categoryId: selectedCategory,
 		// 	categoryName: category?.name,
 		// });

@@ -25,9 +25,10 @@ import Image from "next/image";
 
 const navItems = [
 	{ label: "Home", href: "/" },
-	{ label: "Technicians", href: "/technicians" },
-	{ label: "Services", href: "/services" },
 	{ label: "About Us", href: "/about" },
+	{ label: "Services", href: "/services" },
+	{ label: "Technicians", href: "/technicians" },
+	{ label: "Categories", href: "/categories" },
 	{ label: "Articles", href: "/articles" },
 ];
 
