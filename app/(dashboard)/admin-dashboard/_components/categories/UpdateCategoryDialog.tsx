@@ -136,15 +136,6 @@ export default function UpdateCategoryDialog({
 			// DEBUG
 			// ==================================================
 
-			console.log("Update category payload:", {
-				name: formData.get("name"),
-				description: formData.get("description"),
-				imageUrl: formData.get("imageUrl"),
-				imagePublicId: formData.get("imagePublicId"),
-				oldImagePublicId: formData.get("oldImagePublicId"),
-				categoryServices: formData.get("categoryServices"),
-			});
-
 			// ==================================================
 			// UPDATE DATABASE
 			// ==================================================

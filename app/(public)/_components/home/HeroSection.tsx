@@ -62,7 +62,7 @@ interface HeroSectionProps {
 	categories: Category[];
 }
 export default function HeroSection({ user, categories }: HeroSectionProps) {
-	console.log(categories);
+	// console.log(categories);
 	const [scrolled, setScrolled] = useState(false);
 
 	const [selectedArea, setSelectedArea] = useState("");
@@ -96,11 +96,11 @@ export default function HeroSection({ user, categories }: HeroSectionProps) {
 			(category) => category.id === selectedCategory,
 		);
 
-		console.log({
-			area: selectedArea,
-			categoryId: selectedCategory,
-			categoryName: category?.name,
-		});
+		// console.log({
+		// 	area: selectedArea,
+		// 	categoryId: selectedCategory,
+		// 	categoryName: category?.name,
+		// });
 	};
 
 	return (

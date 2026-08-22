@@ -40,7 +40,7 @@ export const updateCategory = async (
 		// DEBUG
 		// ==========================================
 
-		console.log("Update category payload:", payload);
+		// console.log("Update category payload:", payload);
 
 		// ==========================================
 		// BACKEND PATCH REQUEST
